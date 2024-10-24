@@ -1,4 +1,5 @@
 using Book_Management_System.Models;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,7 +16,9 @@ namespace Book_Management_System.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            Book book = new Book { Id = 1,Title = "Hobbit",Author = "J.R.R Tolkien",Language = "English" };
+
+            return View(book);
         }
 
         public IActionResult Privacy()
