@@ -1,4 +1,4 @@
-﻿@model Domain.Entities.Book
+﻿@model List<Domain.Entities.Book>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,6 +6,37 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
-    <p>@Model.Id | @Model.Title | @Model.Author | @Model.Language</p>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Language</th>
+                <th>Borrowed</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model) {
+
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.Language</td>
+                    <td>@book.Borrowed</td>
+                    <td>
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Book" asp-route-id="@book.Id">Details</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Book" asp-route-id="@book.Id">Delete</a>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-controller="Book" asp-route-id="@book.Id">Edit</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <a class="btn-light" asp-action="Add" asp-controller="Book">Add book</a>
 </div>

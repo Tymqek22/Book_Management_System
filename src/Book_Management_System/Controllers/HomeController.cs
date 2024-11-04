@@ -1,5 +1,6 @@
 using Book_Management_System.Models;
 using Domain.Entities;
+using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -7,18 +8,16 @@ namespace Book_Management_System.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly TempDB _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(TempDB context)
         {
-            _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            Book book = new Book { Id = 1,Title = "Hobbit",Author = "J.R.R Tolkien",Language = "English" };
-
-            return View(book);
+            return View(_context.Books);
         }
 
         public IActionResult Privacy()

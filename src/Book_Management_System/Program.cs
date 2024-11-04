@@ -1,7 +1,13 @@
+using Book_Management_System.Services;
+using Domain.Persistence;
+using Domain.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddSingleton<TempDB>();
+builder.Services.AddSingleton<IBookService,BookService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,17 @@
+﻿@model Domain.Entities.Book
+
+@{
+}
+
+<form asp-action="Edit" asp-controller="Book">
+	<input type="hidden" asp-for="Id" value="@Model.Id"/>
+	<label>Title</label>
+	<input type="text" asp-for="Title" />
+	<label>Author</label>
+	<input type="text" asp-for="Author" />
+	<label>Language</label>
+	<input type="text" asp-for="Language" />
+	<label>Borrowed</label>
+	<input type="checkbox" asp-for="Borrowed" />
+	<input class="btn btn-outline-dark" type="submit" />
+</form>
