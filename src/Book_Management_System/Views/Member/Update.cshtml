@@ -1,0 +1,18 @@
+﻿@model Domain.Entities.Member;
+
+@{
+}
+
+<form asp-action="Update" asp-controller="Member">
+	<input type="hidden" asp-for="Id" value="@Model.Id" />
+	<label>First Name</label>
+	<input type="text" asp-for="FirstName" />
+	<label>Last Name</label>
+	<input type="text" asp-for="LastName" />
+	<label>Email</label>
+	<input type="email" asp-for="Email" />
+	<label>Phone</label>
+	<input type="tel" asp-for="Phone" />
+	<input type="hidden" asp-for="IsActive" value="true" />
+	<input class="btn btn-success" type="submit" />
+</form>

@@ -11,6 +11,7 @@ namespace Domain.Persistence
 	public class TempDB
 	{
         public List<Book> Books { get; set; }
+		public List<Member> Members { get; set; }
 
         public TempDB()
         {
@@ -39,6 +40,19 @@ namespace Domain.Persistence
 					Author = "Author 3",
 					Language = "English",
 					Borrowed = false
+				}
+			};
+
+			Members = new List<Member>
+			{
+				new Member
+				{
+					Id = 1,
+					FirstName = "Jack",
+					LastName = "Rider",
+					Email = "jackrider@gmail.com",
+					Phone = "123456789",
+					IsActive = true
 				}
 			};
         }
