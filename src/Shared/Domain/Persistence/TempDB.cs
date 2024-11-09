@@ -12,6 +12,7 @@ namespace Domain.Persistence
 	{
         public List<Book> Books { get; set; }
 		public List<Member> Members { get; set; }
+        public List<BorrowRecord> BorrowRecords { get; set; }
 
         public TempDB()
         {
@@ -55,6 +56,8 @@ namespace Domain.Persistence
 					IsActive = true
 				}
 			};
+
+			BorrowRecords = new();
         }
     }
 }

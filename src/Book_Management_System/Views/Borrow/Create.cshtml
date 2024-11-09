@@ -1,0 +1,20 @@
+﻿@model Domain.Entities.BorrowRecord
+
+@{
+}
+
+<form method="post" asp-action="Create">
+	<label>Id</label>
+	<input type="number" asp-for="Id" />
+	<label>Book to issue</label>
+	<a class="bg-light">@ViewBag.Book.Title</a>
+	<label>Member</label>
+	<select asp-for="MemberId" asp-items="@ViewBag.Members">
+		<option value="">--Select member--</option>
+	</select>
+	<label>Lend till</label>
+	<input type="date" asp-for="EndDate"/>
+	<input type="hidden" asp-for="BookId" value="@ViewBag.Book.Id" />
+
+	<input type="submit" class="btn btn-outline-success" value="Submit"/>
+</form>
