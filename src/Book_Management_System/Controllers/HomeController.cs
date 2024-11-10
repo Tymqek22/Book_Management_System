@@ -2,22 +2,25 @@ using Book_Management_System.Models;
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace Book_Management_System.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly TempDB _context;
+        private readonly ApplicationDbContext _dbContext;
 
-        public HomeController(TempDB context)
+        public HomeController(ApplicationDbContext dbContext)
         {
-            _context = context;
+            _dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_context.Books);
+            var books = await _dbContext.Books.ToListAsync();
+
+            return View(books);
         }
 
         public IActionResult Privacy()

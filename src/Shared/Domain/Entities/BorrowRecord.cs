@@ -13,10 +13,10 @@ namespace Domain.Entities
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-		public int MemberId { get; set; }
+		public int? MemberId { get; set; }
 		public Member? Member { get; set; }
 
-		public int BookId { get; set; }
+		public int? BookId { get; set; }
 		public Book? Book { get; set; }
     }
 }

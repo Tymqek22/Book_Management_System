@@ -1,22 +1,25 @@
 ﻿using Domain.Entities;
-using Domain.Interfaces;
+using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Book_Management_System.Controllers
 {
 	public class MemberController : Controller
 	{
-		private readonly IMemberService _memberService;
+		private readonly ApplicationDbContext _dbContext;
 
-        public MemberController(IMemberService memberService)
+        public MemberController(ApplicationDbContext dbContext)
         {
-			_memberService = memberService;
+			_dbContext = dbContext;
         }
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			return View(_memberService.GetAllMembers());
+			var members = await _dbContext.Members.ToListAsync();
+
+			return View(members);
 		}
 
         public IActionResult Register()
@@ -25,29 +28,49 @@ namespace Book_Management_System.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Register(Member newMember)
+		public async Task<IActionResult> Register(Member newMember)
 		{
-			_memberService.RegisterMember(newMember);
+			await _dbContext.Members.AddAsync(newMember);
+			await _dbContext.SaveChangesAsync();
+
 			return RedirectToAction("Index");
 		}
 
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_memberService.DeleteMember(id);
+			var member = await _dbContext.Members.FindAsync(id);
+
+			if (member != null) {
+
+				_dbContext.Members.Remove(member);
+				await _dbContext.SaveChangesAsync();
+			}
+
 			return RedirectToAction("Index");
 		}
 
-        public IActionResult Update(int id)
+        public async Task<IActionResult> Update(int id)
         {
-			var foundMember = _memberService.GetMember(id);
+			var foundMember = await _dbContext.Members.FindAsync(id);
 
 			return View(foundMember);
         }
 
 		[HttpPost]
-		public IActionResult Update(Member memberToUpdate)
+		public async Task<IActionResult> Update(Member memberToUpdate)
 		{
-			_memberService.UpdateMemberDetails(memberToUpdate);
+			var member = await _dbContext.Members.FindAsync(memberToUpdate.Id);
+
+			if (member != null) {
+
+				member.FirstName = memberToUpdate.FirstName;
+				member.LastName = memberToUpdate.LastName;
+				member.Email = memberToUpdate.Email;
+				member.Phone = memberToUpdate.Phone;
+
+				await _dbContext.SaveChangesAsync();
+			}
+
 			return RedirectToAction("Index");
 		}
     }

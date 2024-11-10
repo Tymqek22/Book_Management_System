@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
-using Domain.Services;
+using Domain.Persistence;
 
 namespace Book_Management_System.Controllers
 {
 	public class BookController : Controller
 	{
-		private readonly IBookService _bookService;
+		private readonly ApplicationDbContext _dbContext;
+		
 
-        public BookController(IBookService bookService)
+        public BookController(ApplicationDbContext dbContext)
         {
-			_bookService = bookService;
+			_dbContext = dbContext;
         }
 
         public IActionResult Add()
@@ -19,37 +20,58 @@ namespace Book_Management_System.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Add(Book book)
+		public async Task<IActionResult> Add(Book book)
 		{
-			_bookService.AddBook(book);
+			await _dbContext.Books.AddAsync(book);
+			await _dbContext.SaveChangesAsync();
+			
 			return RedirectToAction("Index","Home");
 		}
 
-		public IActionResult Delete(int id)
+		
+		public async Task<IActionResult> Delete(int id)
 		{
-			_bookService.DeleteBook(id);
+			var book = await _dbContext.Books.FindAsync(id);
+
+			if (book != null) {
+
+				_dbContext.Books.Remove(book);
+				await _dbContext.SaveChangesAsync();
+			}
+
 			return RedirectToAction("Index","Home");
 		}
 
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var result = _bookService.GetBookById(id);
+			var book = await _dbContext.Books.FindAsync(id);
 
-			return View(result);
+			return View(book);
 		}
 
 		[HttpPost]
-		public IActionResult Edit(Book book)
+		public async Task<IActionResult> Edit(Book newBook)
 		{
-			_bookService.EditBook(book.Id,book);
+			var book = await _dbContext.Books.FindAsync(newBook.Id);
+
+			if (book != null) {
+
+				book.Title = newBook.Title;
+				book.Author = newBook.Author;
+				book.Language = newBook.Language;
+				book.Borrowed = newBook.Borrowed;
+
+				await _dbContext.SaveChangesAsync();
+			}
+
 			return RedirectToAction("Index","Home");
 		}
 
-		public IActionResult Details(int id)
+		public async Task<IActionResult> Details(int id)
 		{
-			var result = _bookService.GetBookById(id);
+			var book = await _dbContext.Books.FindAsync(id);
 			
-			return View(result);
+			return View(book);
 		}
 	}
 }

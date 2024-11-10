@@ -3,15 +3,26 @@
 @{
 }
 
-<form asp-action="Update" asp-controller="Member">
-	<input type="hidden" asp-for="Id" value="@Model.Id" />
-	<label>First Name</label>
-	<input type="text" asp-for="FirstName" />
-	<label>Last Name</label>
-	<input type="text" asp-for="LastName" />
-	<label>Email</label>
-	<input type="email" asp-for="Email" />
-	<label>Phone</label>
-	<input type="tel" asp-for="Phone" />
-	<input class="btn btn-success" type="submit" />
+<form method="post" asp-action="Update" asp-controller="Member">
+	<div class="mt-3">
+		<label class="form-label" for="FirstName">First Name</label>
+		<input class="form-control" type="text" asp-for="FirstName" />
+	</div>
+
+	<div class="mt-3">
+		<label class="form-label" for="LastName">Last Name</label>
+		<input class="form-control" type="text" asp-for="LastName" />
+	</div>
+
+	<div class="mt-3">
+		<label class="form-label" for="Email">Email</label>
+		<input class="form-control" type="email" asp-for="Email" />
+	</div>
+
+	<div class="mt-3">
+		<label class="form-label" for="Phone">Phone</label>
+		<input class="form-control" type="tel" asp-for="Phone" />
+	</div>
+
+	<input class="btn btn-success" type="submit" value="Save Changes" />
 </form>

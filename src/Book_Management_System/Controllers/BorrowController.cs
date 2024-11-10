@@ -3,48 +3,52 @@ using Domain.DTO;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace Book_Management_System.Controllers
 {
 	public class BorrowController : Controller
 	{
-		private readonly TempDB _context;
+		private readonly ApplicationDbContext _dbContext;
 
-        public BorrowController(TempDB context)
+        public BorrowController(ApplicationDbContext dbContext)
         {
-			_context = context;
+			_dbContext = dbContext;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
 		{
-			var records = _context.BorrowRecords;
+			var records = await _dbContext.BorrowRecords.ToListAsync();
 
 			return View(records);
 		}
 
-		public IActionResult Create(int id)
+		public async Task<IActionResult> Create(int id)
 		{
-			var book = _context.Books.FirstOrDefault(b => b.Id == id);
+			var book = await _dbContext.Books.FindAsync(id);
 			ViewBag.Book = book;
 			PopulateMembers();
 
 			return View();
 		}
 
+		//TODO: fixing sql joins
 		[HttpPost]
-		public IActionResult Create(BorrowRecord model)
+		public async Task<IActionResult> Create(BorrowRecord model)
 		{
-			model.Member = _context.Members.FirstOrDefault(m => m.Id == model.MemberId);
-			model.Book = _context.Books.FirstOrDefault(b => b.Id == model.BookId);
+			model.Member = _dbContext.Members.FirstOrDefault(m => m.Id == model.MemberId);
+			model.Book = _dbContext.Books.FirstOrDefault(b => b.Id == model.BookId);
 
-			_context.BorrowRecords.Add(model);
+			await _dbContext.BorrowRecords.AddAsync(model);
+			await _dbContext.SaveChangesAsync();
+
 			return RedirectToAction("Index");
 		}
 
 		[NonAction]
 		private void PopulateMembers()
 		{
-			var members = _context.Members
+			var members = _dbContext.Members
 				.Select(m => new MemberDto
 				{
 					Id = m.Id,
