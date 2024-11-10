@@ -6,42 +6,45 @@ namespace Book_Management_System.Services
 {
 	public class BookService : IBookService
 	{
-		private readonly TempDB _context;
+		private readonly ApplicationDbContext _dbContext;
 
-        public BookService(TempDB context)
+        public BookService(ApplicationDbContext dbContext)
         {
-			_context = context;
+			_dbContext = dbContext;
         }
 
         public void AddBook(Book book)
 		{
-			_context.Books.Add(book);
+			_dbContext.Books.Add(book);
+			_dbContext.SaveChanges();
 		}
 
 		public void DeleteBook(int id)
 		{
-			var result = _context.Books.FirstOrDefault(b => b.Id == id);
+			var result = _dbContext.Books.FirstOrDefault(b => b.Id == id);
 
 			if (result != null) {
 
-				_context.Books.Remove(result);
+				_dbContext.Books.Remove(result);
+				_dbContext.SaveChanges();
 			}
+
 		}
 
 		public void EditBook(int id, Book newBook)
 		{
-			var result = _context.Books.FirstOrDefault(b => b.Id == id);
+			var result = _dbContext.Books.FirstOrDefault(b => b.Id == id);
 
 			if (result != null) {
 
-				int index = _context.Books.IndexOf(result);
-				_context.Books[index] = newBook;
+				result = newBook;
+				_dbContext.SaveChanges();
 			}
 		}
 
 		public Book GetBookById(int id)
 		{
-			return _context.Books.FirstOrDefault(b => b.Id == id);
+			return _dbContext.Books.FirstOrDefault(b => b.Id == id);
 		}
 	}
 }

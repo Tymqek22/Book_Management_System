@@ -3,18 +3,42 @@
 @{
 }
 
-<form method="post" asp-action="Create">
-	<label>Id</label>
-	<input type="number" asp-for="Id" />
-	<label>Book to issue</label>
-	<a class="bg-light">@ViewBag.Book.Title</a>
-	<label>Member</label>
-	<select asp-for="MemberId" asp-items="@ViewBag.Members">
-		<option value="">--Select member--</option>
-	</select>
-	<label>Lend till</label>
-	<input type="date" asp-for="EndDate"/>
-	<input type="hidden" asp-for="BookId" value="@ViewBag.Book.Id" />
+<div class="col-5 align-self-center">
+	<form class="form-control" method="post" asp-action="Create">
 
-	<input type="submit" class="btn btn-outline-success" value="Submit"/>
-</form>
+		<div class="mb-3">
+			<label class="form-label">Id</label>
+			<div class="input-group-text">
+				<input type="number" asp-for="Id" />
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label">Book to issue</label>
+			<div class="input-group-text">
+				<a class="bg-light">@ViewBag.Book.Title</a>
+			</div>
+		</div>
+
+		<div class="mb-3">
+			<label class="form-label">Member</label>
+			<div class="input-group-text">
+				<select asp-for="MemberId" asp-items="@ViewBag.Members">
+					<option value="">--Select member--</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="mb-3">
+			<label class="form-label">Lend till</label>
+			<div class="input-group-text">
+				<input type="date" asp-for="EndDate" />
+			</div>
+		</div>
+		
+		<input type="hidden" asp-for="BookId" value="@ViewBag.Book.Id" />
+		<div class="mb-3">
+			<input type="submit" class="btn btn-outline-success" value="Submit" />
+		</div>
+	</form>
+</div>

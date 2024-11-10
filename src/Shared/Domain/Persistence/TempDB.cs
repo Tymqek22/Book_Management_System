@@ -52,8 +52,7 @@ namespace Domain.Persistence
 					FirstName = "Jack",
 					LastName = "Rider",
 					Email = "jackrider@gmail.com",
-					Phone = "123456789",
-					IsActive = true
+					Phone = "123456789"
 				}
 			};
 

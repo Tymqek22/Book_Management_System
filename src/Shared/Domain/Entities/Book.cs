@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Domain.Entities
 {
 	public class Book
 	{
@@ -7,5 +9,9 @@
         public string Author { get; set; }
         public string Language { get; set; }
         public bool Borrowed { get; set; }
+
+        public int BorrowRecordId { get; set; }
+        [ForeignKey("BorrowRecordId")]
+        public BorrowRecord? BorrowRecord { get; set; }
     }
 }
