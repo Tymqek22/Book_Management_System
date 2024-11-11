@@ -52,6 +52,25 @@ namespace Book_Management_System.Controllers
 			return RedirectToAction("Index");
 		}
 
+		
+		public async Task<IActionResult> Return(int id)
+		{
+			var borrowRecord = await _dbContext.BorrowRecords.FindAsync(id);
+
+			if (borrowRecord != null) {
+
+				var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
+
+				book.Borrowed = false;
+				
+				_dbContext.BorrowRecords.Remove(borrowRecord);
+			}
+
+			await _dbContext.SaveChangesAsync();
+
+			return RedirectToAction("Index");
+		}
+
 		[NonAction]
 		private void PopulateMembers()
 		{

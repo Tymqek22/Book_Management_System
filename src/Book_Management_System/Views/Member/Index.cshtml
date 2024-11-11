@@ -23,6 +23,7 @@
                     <td>@member.Email</td>
                     <td>@member.Phone</td>
                     <td>
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Member" asp-route-id="@member.Id">Details</a>
                         <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Member" asp-route-id="@member.Id">Delete</a>
                         <a class="btn btn-outline-secondary" asp-action="Update" asp-controller="Member" asp-route-id="@member.Id">Edit</a>
                     </td>

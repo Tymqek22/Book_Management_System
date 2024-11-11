@@ -1,8 +1,8 @@
 ﻿using Domain.Entities;
+using Domain.Entities.ViewModels;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 
 namespace Book_Management_System.Controllers
 {
@@ -20,6 +20,25 @@ namespace Book_Management_System.Controllers
 			var members = await _dbContext.Members.ToListAsync();
 
 			return View(members);
+		}
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var member = await _dbContext.Members.FindAsync(id);
+
+			var borrowRecords = await _dbContext.BorrowRecords
+					.Include(b => b.Book)
+					.Where(br => br.MemberId == member.Id)
+					.ToListAsync();
+
+
+			var memberViewModel = new MemberViewModel
+			{
+				Member = member,
+				BorrowRecords = borrowRecords,
+			};
+
+			return View(memberViewModel);
 		}
 
         public IActionResult Register()

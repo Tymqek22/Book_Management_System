@@ -1,0 +1,39 @@
+﻿@model Domain.Entities.ViewModels.MemberViewModel
+
+@{
+}
+
+<div class="d-flex">
+	<div class="card">
+		<div class="card-header text-center">
+			<h1 class="card-title">Member</h1>
+		</div>
+		<div class="card-body">
+			<dl>
+				<dt>FullName</dt>
+				<dd class="card-text">@Model.Member.FirstName @Model.Member.LastName</dd>
+				<dt>Email</dt>
+				<dd class="card-text">@Model.Member.Email</dd>
+				<dt>Phone</dt>
+				<dd class="card-text">@Model.Member.Phone</dd>
+			</dl>
+		</div>
+		
+
+	</div>
+
+	<ul class="list-group">
+		<div class="text-center">
+			<h2>Books borrowed</h2>
+		</div>
+
+		@foreach (var borrowRecord in Model.BorrowRecords) {
+
+			<li class="list-group-item">
+				<p>@borrowRecord.Book.Title</p>
+				<p>@borrowRecord.Book.Author</p>
+			</li>
+		}
+
+	</ul>
+</div>
