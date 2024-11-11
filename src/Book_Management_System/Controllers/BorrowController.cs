@@ -18,26 +18,33 @@ namespace Book_Management_System.Controllers
 
         public async Task<IActionResult> Index()
 		{
-			var records = await _dbContext.BorrowRecords.ToListAsync();
+			var records = await _dbContext.BorrowRecords
+				.Include(m => m.Member)
+				.Include(b => b.Book)
+				.ToListAsync();
 
 			return View(records);
 		}
 
-		public async Task<IActionResult> Create(int id)
+		public async Task<IActionResult> Create(int bookId)
 		{
-			var book = await _dbContext.Books.FindAsync(id);
+			var book = await _dbContext.Books.FindAsync(bookId);
 			ViewBag.Book = book;
 			PopulateMembers();
 
 			return View();
 		}
 
-		//TODO: fixing sql joins
+		
 		[HttpPost]
 		public async Task<IActionResult> Create(BorrowRecord model)
 		{
-			model.Member = _dbContext.Members.FirstOrDefault(m => m.Id == model.MemberId);
-			model.Book = _dbContext.Books.FirstOrDefault(b => b.Id == model.BookId);
+			var book = await _dbContext.Books.FindAsync(model.BookId);
+
+			if (book != null) {
+
+				book.Borrowed = true;
+			}
 
 			await _dbContext.BorrowRecords.AddAsync(model);
 			await _dbContext.SaveChangesAsync();

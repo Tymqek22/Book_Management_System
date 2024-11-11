@@ -10,8 +10,6 @@ namespace Domain.Entities
         public string Language { get; set; }
         public bool Borrowed { get; set; }
 
-        public int? BorrowRecordId { get; set; }
-        [ForeignKey("BorrowRecordId")]
         public BorrowRecord? BorrowRecord { get; set; }
     }
 }

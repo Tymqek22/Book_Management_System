@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Domain.Entities;
 using Domain.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 namespace Book_Management_System.Controllers
 {
@@ -60,9 +61,9 @@ namespace Book_Management_System.Controllers
 				book.Author = newBook.Author;
 				book.Language = newBook.Language;
 				book.Borrowed = newBook.Borrowed;
-
-				await _dbContext.SaveChangesAsync();
 			}
+
+			await _dbContext.SaveChangesAsync();
 
 			return RedirectToAction("Index","Home");
 		}
