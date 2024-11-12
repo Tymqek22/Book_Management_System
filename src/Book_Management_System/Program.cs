@@ -1,3 +1,5 @@
+using Book_Management_System.Interfaces;
+using Book_Management_System.Services;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,6 +11,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options => 
 options.UseSqlServer(builder.Configuration.GetConnectionString("BookManagementSystem"), b => 
 b.MigrationsAssembly("Book_Management_System")));
+
+builder.Services.AddScoped<IBorrowService,BorrowService>();
 
 var app = builder.Build();
 

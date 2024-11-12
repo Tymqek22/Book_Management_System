@@ -4,23 +4,28 @@ using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Book_Management_System.Interfaces;
 
 namespace Book_Management_System.Controllers
 {
 	public class BorrowController : Controller
 	{
 		private readonly ApplicationDbContext _dbContext;
+		private readonly IBorrowService _borrowService;
 
-        public BorrowController(ApplicationDbContext dbContext)
+        public BorrowController(ApplicationDbContext dbContext, IBorrowService borrowService)
         {
 			_dbContext = dbContext;
+			_borrowService = borrowService;
         }
 
         public async Task<IActionResult> Index()
 		{
+			await _borrowService.TrackOverdue();
+
 			var records = await _dbContext.BorrowRecords
-				.Include(m => m.Member)
 				.Include(b => b.Book)
+				.Include(m => m.Member)
 				.ToListAsync();
 
 			return View(records);
@@ -39,15 +44,7 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(BorrowRecord model)
 		{
-			var book = await _dbContext.Books.FindAsync(model.BookId);
-
-			if (book != null) {
-
-				book.Borrowed = true;
-			}
-
-			await _dbContext.BorrowRecords.AddAsync(model);
-			await _dbContext.SaveChangesAsync();
+			await _borrowService.LendBook(model);
 
 			return RedirectToAction("Index");
 		}
@@ -55,18 +52,7 @@ namespace Book_Management_System.Controllers
 		
 		public async Task<IActionResult> Return(int id)
 		{
-			var borrowRecord = await _dbContext.BorrowRecords.FindAsync(id);
-
-			if (borrowRecord != null) {
-
-				var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
-
-				book.Borrowed = false;
-				
-				_dbContext.BorrowRecords.Remove(borrowRecord);
-			}
-
-			await _dbContext.SaveChangesAsync();
+			await _borrowService.ReturnBook(id);
 
 			return RedirectToAction("Index");
 		}

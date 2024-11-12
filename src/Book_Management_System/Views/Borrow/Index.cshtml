@@ -21,7 +21,12 @@
 			</dl>
 		</div>
 		<div class="card-footer mb-3">
-			<a class="btn btn-info" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Return</a>
+			@if (borrowRecord.IsOverdue) {
+				<a class="btn btn-danger" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Return and pay the fee (@borrowRecord.OverdueFine zł)</a>
+			}
+			else {
+				<a class="btn btn-info" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Return</a>
+			}			
 		</div>
 	}
 </div>
