@@ -4,9 +4,8 @@ namespace Book_Management_System.Interfaces
 {
 	public interface IBorrowService
 	{
-		Task LendBook(BorrowRecord borrowRecord);
-		Task ReturnBook(int id);
-		bool IsBookAvailable(Book book);
+		Task<bool> LendBook(BorrowRecord borrowRecord);
+		Task<bool> ReturnBook(int id);
 
 		Task TrackOverdue();
 		void CalculateFine(BorrowRecord borrowRecord);

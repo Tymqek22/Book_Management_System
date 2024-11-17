@@ -14,20 +14,31 @@ namespace Book_Management_System.Services
 			_dbContext = dbContext;
         }
 
-        public async Task LendBook(BorrowRecord borrowRecord)
+        public async Task<bool> LendBook(BorrowRecord borrowRecord)
 		{
 			var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
 
-			if (IsBookAvailable(book)) {
+			if (book != null) {
 
-				book.Borrowed = true;
+				if (!book.IsBorrowed) {
 
-				await _dbContext.BorrowRecords.AddAsync(borrowRecord);
-				await _dbContext.SaveChangesAsync();
+					book.IsBorrowed = true;
+
+					await _dbContext.BorrowRecords.AddAsync(borrowRecord);
+					await _dbContext.SaveChangesAsync();
+				}
+				else {
+					return false;
+				}
 			}
+			else {
+				return false;
+			}
+
+			return true;
 		}
 
-		public async Task ReturnBook(int id)
+		public async Task<bool> ReturnBook(int id)
 		{
 			var borrowRecord = await _dbContext.BorrowRecords.FindAsync(id);
 
@@ -35,17 +46,22 @@ namespace Book_Management_System.Services
 
 				var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
 
-				book.Borrowed = false;
+				if (book != null) {
 
-				_dbContext.BorrowRecords.Remove(borrowRecord);
+					book.IsBorrowed = false;
+
+					_dbContext.BorrowRecords.Remove(borrowRecord);
+					await _dbContext.SaveChangesAsync();
+				}
+				else {
+					return false;
+				}
+			}
+			else {
+				return false;
 			}
 
-			await _dbContext.SaveChangesAsync();
-		}
-
-		public bool IsBookAvailable(Book book)
-		{
-			return !book.Borrowed;
+			return true;
 		}
 
 		public async Task TrackOverdue()
@@ -56,7 +72,10 @@ namespace Book_Management_System.Services
 
 			foreach (var borrowRecord in overdueBooks) {
 
-				borrowRecord.IsOverdue = true;
+				if (!borrowRecord.IsOverdue) {
+					borrowRecord.IsOverdue = true;
+				}
+				
 				this.CalculateFine(borrowRecord);
 			}
 

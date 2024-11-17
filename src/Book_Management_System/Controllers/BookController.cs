@@ -60,7 +60,7 @@ namespace Book_Management_System.Controllers
 				book.Title = newBook.Title;
 				book.Author = newBook.Author;
 				book.Language = newBook.Language;
-				book.Borrowed = newBook.Borrowed;
+				book.IsBorrowed = newBook.IsBorrowed;
 			}
 
 			await _dbContext.SaveChangesAsync();

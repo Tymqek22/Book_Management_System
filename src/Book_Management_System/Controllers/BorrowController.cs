@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Book_Management_System.Interfaces;
+using Book_Management_System.Models;
 
 namespace Book_Management_System.Controllers
 {
@@ -44,7 +45,15 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(BorrowRecord model)
 		{
-			await _borrowService.LendBook(model);
+			if (!(await _borrowService.LendBook(model))) {
+
+				var error = new ErrorViewModel()
+				{
+					RequestId = "Book cannot be issued."
+				};
+
+				return View("Error",error);
+			}
 
 			return RedirectToAction("Index");
 		}
@@ -52,7 +61,15 @@ namespace Book_Management_System.Controllers
 		
 		public async Task<IActionResult> Return(int id)
 		{
-			await _borrowService.ReturnBook(id);
+			if (!(await _borrowService.ReturnBook(id))) {
+
+				var error = new ErrorViewModel()
+				{
+					RequestId = "Book cannot be returned."
+				};
+
+				return View("Error",error);
+			}
 
 			return RedirectToAction("Index");
 		}
