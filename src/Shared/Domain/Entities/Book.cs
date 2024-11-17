@@ -8,8 +8,9 @@ namespace Domain.Entities
         public string Title { get; set; }
         public string Author { get; set; }
         public string Language { get; set; }
-        public bool IsBorrowed { get; set; }
+        public bool IsAvailable { get; set; }
+        public int Quantity { get; set; }
 
-        public BorrowRecord? BorrowRecord { get; set; }
+        public List<BorrowRecord>? BorrowRecord { get; set; }
     }
 }

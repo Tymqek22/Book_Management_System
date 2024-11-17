@@ -12,12 +12,14 @@
 			<dt>Language:</dt>
 			<dd>@Model.Language</dd>
 			<dt>Available:</dt>
-			@if (!Model.IsBorrowed) {
+			@if (Model.IsAvailable) {
 				<span class="badge bg-success">Available</span>
 			}
 			else {
 				<span class="badge bg-danger">Not Available</span>
 			}
+			<dt>Quantity</dt>
+			<dd>@Model.Quantity</dd>
 		</dl>
 	</div>
 	

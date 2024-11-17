@@ -20,9 +20,9 @@ namespace Book_Management_System.Services
 
 			if (book != null) {
 
-				if (!book.IsBorrowed) {
+				if (this.IsBookAvailable(book)) {
 
-					book.IsBorrowed = true;
+					book.Quantity--;
 
 					await _dbContext.BorrowRecords.AddAsync(borrowRecord);
 					await _dbContext.SaveChangesAsync();
@@ -48,7 +48,7 @@ namespace Book_Management_System.Services
 
 				if (book != null) {
 
-					book.IsBorrowed = false;
+					book.Quantity++;
 
 					_dbContext.BorrowRecords.Remove(borrowRecord);
 					await _dbContext.SaveChangesAsync();
@@ -62,6 +62,14 @@ namespace Book_Management_System.Services
 			}
 
 			return true;
+		}
+
+		public bool IsBookAvailable(Book book)
+		{
+			if (book.IsAvailable && book.Quantity > 0) {
+				return true;
+			}
+			return false;
 		}
 
 		public async Task TrackOverdue()

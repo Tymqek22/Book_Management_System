@@ -15,7 +15,15 @@ namespace Book_Management_System.Controllers
 			_dbContext = dbContext;
         }
 
-        public IActionResult Add()
+		public async Task<IActionResult> Index()
+		{
+			await this.TrackAvailibility();
+			var books = await _dbContext.Books.ToListAsync();
+
+			return View(books);
+		}
+
+		public IActionResult Add()
 		{
 			return View();
 		}
@@ -26,7 +34,7 @@ namespace Book_Management_System.Controllers
 			await _dbContext.Books.AddAsync(book);
 			await _dbContext.SaveChangesAsync();
 			
-			return RedirectToAction("Index","Home");
+			return RedirectToAction("Index");
 		}
 
 		
@@ -40,7 +48,7 @@ namespace Book_Management_System.Controllers
 				await _dbContext.SaveChangesAsync();
 			}
 
-			return RedirectToAction("Index","Home");
+			return RedirectToAction("Index");
 		}
 
 		public async Task<IActionResult> Edit(int id)
@@ -60,12 +68,13 @@ namespace Book_Management_System.Controllers
 				book.Title = newBook.Title;
 				book.Author = newBook.Author;
 				book.Language = newBook.Language;
-				book.IsBorrowed = newBook.IsBorrowed;
+				book.IsAvailable = newBook.IsAvailable;
+				book.Quantity = newBook.Quantity;
 			}
 
 			await _dbContext.SaveChangesAsync();
 
-			return RedirectToAction("Index","Home");
+			return RedirectToAction("Index");
 		}
 
 		public async Task<IActionResult> Details(int id)
@@ -73,6 +82,36 @@ namespace Book_Management_System.Controllers
 			var book = await _dbContext.Books.FindAsync(id);
 			
 			return View(book);
+		}
+
+		[NonAction]
+		public async Task TrackAvailibility()
+		{
+			var unavailableBooks = await _dbContext.Books
+				.Where(b => b.Quantity == 0 && b.IsAvailable)
+				.ToListAsync();
+
+			if (unavailableBooks != null) {
+
+				foreach(var book in unavailableBooks) {
+
+					book.IsAvailable = false;
+				}
+			}
+
+			var availableBooks = await _dbContext.Books
+				.Where(b => b.Quantity > 0 && !b.IsAvailable)
+				.ToListAsync();
+
+			if (availableBooks != null) {
+
+				foreach (var book in availableBooks) {
+
+					book.IsAvailable = true;
+				}
+			}
+
+			await _dbContext.SaveChangesAsync();
 		}
 	}
 }

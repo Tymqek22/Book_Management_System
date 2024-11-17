@@ -4,6 +4,7 @@ using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Book_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241117175046_Quantity of the books added")]
+    partial class Quantityofthebooksadded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,9 @@ namespace Book_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("BookId")
+                        .IsUnique()
+                        .HasFilter("[BookId] IS NOT NULL");
 
                     b.HasIndex("MemberId");
 
@@ -120,8 +125,8 @@ namespace Book_Management_System.Migrations
             modelBuilder.Entity("Domain.Entities.BorrowRecord", b =>
                 {
                     b.HasOne("Domain.Entities.Book", "Book")
-                        .WithMany("BorrowRecord")
-                        .HasForeignKey("BookId");
+                        .WithOne("BorrowRecord")
+                        .HasForeignKey("Domain.Entities.BorrowRecord", "BookId");
 
                     b.HasOne("Domain.Entities.Member", "Member")
                         .WithMany("BorrowRecords")
