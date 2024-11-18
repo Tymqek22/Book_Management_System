@@ -49,8 +49,14 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Register(Member newMember)
 		{
-			await _dbContext.Members.AddAsync(newMember);
-			await _dbContext.SaveChangesAsync();
+			if (ModelState.IsValid) {
+
+				await _dbContext.Members.AddAsync(newMember);
+				await _dbContext.SaveChangesAsync();
+			}
+			else {
+				return View(newMember);
+			}
 
 			return RedirectToAction("Index");
 		}
@@ -78,16 +84,22 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Update(Member memberToUpdate)
 		{
-			var member = await _dbContext.Members.FindAsync(memberToUpdate.Id);
+			if (ModelState.IsValid) {
 
-			if (member != null) {
+				var member = await _dbContext.Members.FindAsync(memberToUpdate.Id);
 
-				member.FirstName = memberToUpdate.FirstName;
-				member.LastName = memberToUpdate.LastName;
-				member.Email = memberToUpdate.Email;
-				member.Phone = memberToUpdate.Phone;
+				if (member != null) {
 
-				await _dbContext.SaveChangesAsync();
+					member.FirstName = memberToUpdate.FirstName;
+					member.LastName = memberToUpdate.LastName;
+					member.Email = memberToUpdate.Email;
+					member.Phone = memberToUpdate.Phone;
+
+					await _dbContext.SaveChangesAsync();
+				}
+			}
+			else {
+				return View(memberToUpdate);
 			}
 
 			return RedirectToAction("Index");

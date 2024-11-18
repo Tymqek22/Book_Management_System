@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Book_Management_System.Controllers
 {
+	//TODO: fix editing while the book is borrowed
 	public class BookController : Controller
 	{
 		private readonly ApplicationDbContext _dbContext;
-		
 
         public BookController(ApplicationDbContext dbContext)
         {
@@ -31,8 +31,15 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add(Book book)
 		{
-			await _dbContext.Books.AddAsync(book);
-			await _dbContext.SaveChangesAsync();
+			if (ModelState.IsValid) {
+
+				await _dbContext.Books.AddAsync(book);
+				await _dbContext.SaveChangesAsync();
+			}
+			else {
+				return View(book);
+			}
+			
 			
 			return RedirectToAction("Index");
 		}
@@ -61,18 +68,24 @@ namespace Book_Management_System.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Edit(Book newBook)
 		{
-			var book = await _dbContext.Books.FindAsync(newBook.Id);
+			if (ModelState.IsValid) {
 
-			if (book != null) {
+				var book = await _dbContext.Books.FindAsync(newBook.Id);
 
-				book.Title = newBook.Title;
-				book.Author = newBook.Author;
-				book.Language = newBook.Language;
-				book.IsAvailable = newBook.IsAvailable;
-				book.Quantity = newBook.Quantity;
+				if (book != null) {
+
+					book.Title = newBook.Title;
+					book.Author = newBook.Author;
+					book.Language = newBook.Language;
+					book.IsAvailable = newBook.IsAvailable;
+					book.Quantity = newBook.Quantity;
+				}
+
+				await _dbContext.SaveChangesAsync();
 			}
-
-			await _dbContext.SaveChangesAsync();
+			else {
+				return View(newBook);
+			}
 
 			return RedirectToAction("Index");
 		}
@@ -91,27 +104,21 @@ namespace Book_Management_System.Controllers
 				.Where(b => b.Quantity == 0 && b.IsAvailable)
 				.ToListAsync();
 
-			if (unavailableBooks != null) {
+            foreach (var book in unavailableBooks) {
 
-				foreach(var book in unavailableBooks) {
-
-					book.IsAvailable = false;
-				}
-			}
+                book.IsAvailable = false;
+            }
 
 			var availableBooks = await _dbContext.Books
 				.Where(b => b.Quantity > 0 && !b.IsAvailable)
 				.ToListAsync();
 
-			if (availableBooks != null) {
+            foreach (var book in availableBooks) {
 
-				foreach (var book in availableBooks) {
+                book.IsAvailable = true;
+            }
 
-					book.IsAvailable = true;
-				}
-			}
-
-			await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
 		}
 	}
 }

@@ -27,7 +27,14 @@
                     <td>@book.Title</td>
                     <td>@book.Author</td>
                     <td>@book.Language</td>
-                    <td>@book.IsAvailable</td>
+                    <td>
+                        @if (@book.IsAvailable) {
+                            <span class="badge bg-success">Available</span>
+                        }
+                        else {
+                            <span class="badge bg-danger">Not available</span>
+                        }
+                    </td>
                     <td>
                         <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Book" asp-route-id="@book.Id">Details</a>
                         <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Book" asp-route-id="@book.Id">Delete</a>

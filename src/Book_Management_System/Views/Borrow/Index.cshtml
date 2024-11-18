@@ -2,31 +2,40 @@
 
 @{
 }
-
-<div class="container text-center col-5">
-	@foreach (var borrowRecord in Model) {
-		
-		<div class="card-header">
-			<h3>@borrowRecord.Member.FirstName @borrowRecord.Member.LastName</h3>
-		</div>
-		<div class="card-body">
-			<dl>
-				<dt class="badge bg-dark">Book</dt>
-				<dd>
-					<strong>@borrowRecord.Book.Title</strong>
-					<p>@borrowRecord.Book.Author</p>
-				</dd>
-				<dt class="badge bg-dark">End Date</dt>
-				<dd>@borrowRecord.EndDate.ToShortDateString()</dd>
-			</dl>
-		</div>
-		<div class="card-footer mb-3">
-			@if (borrowRecord.IsOverdue) {
-				<a class="btn btn-danger" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Return and pay the fee (@borrowRecord.OverdueFine zł)</a>
+<div class="album py-5 bg-light">
+	<div class="container">
+		<div class="row">
+			@foreach (var borrowRecord in Model) {
+				
+				<div class="col-md-4">
+					<div class="card mb-4 box-shadow">
+						<div class="card-header">
+							<h3>@borrowRecord.Member.FirstName @borrowRecord.Member.LastName</h3>
+						</div>
+						<div class="card-body">
+							<dl>
+								<dt class="badge bg-dark">Book</dt>
+								<dd>
+									<strong>@borrowRecord.Book.Title</strong>
+									<p>@borrowRecord.Book.Author</p>
+								</dd>
+								<dt class="badge bg-dark">End Date</dt>
+								<dd>@borrowRecord.EndDate.ToShortDateString()</dd>
+							</dl>
+						</div>
+						<div class="card-footer mb-3">
+							@if (borrowRecord.IsOverdue) {
+								<a class="btn btn-danger" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Confirm return and charge (@borrowRecord.OverdueFine zł)</a>
+							}
+							else {
+								<a class="btn btn-info" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Confirm return</a>
+							}
+						</div>
+					</div>
+				</div>
 			}
-			else {
-				<a class="btn btn-info" asp-action="Return" asp-controller="Borrow" asp-route-id="@borrowRecord.Id">Return</a>
-			}			
 		</div>
-	}
+
+	</div>
 </div>
+
