@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Book_Management_System.Models;
+using Domain.Entities;
 using Domain.Entities.ViewModels;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -65,10 +66,27 @@ namespace Book_Management_System.Controllers
 		{
 			var member = await _dbContext.Members.FindAsync(id);
 
+			member.BorrowRecords = await _dbContext.BorrowRecords
+				.Where(br => br.MemberId == member.Id)
+				.ToListAsync();
+
 			if (member != null) {
 
-				_dbContext.Members.Remove(member);
-				await _dbContext.SaveChangesAsync();
+				if (member.BorrowRecords.Count == 0) {
+
+					_dbContext.Members.Remove(member);
+					await _dbContext.SaveChangesAsync();
+				}
+				else {
+
+					var error = new ErrorViewModel
+					{
+						RequestId = "Cannot delete the member, has books borrowed."
+					};
+
+					return View("Error",error);
+				}
+				
 			}
 
 			return RedirectToAction("Index");

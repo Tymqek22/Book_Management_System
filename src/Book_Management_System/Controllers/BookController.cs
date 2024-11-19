@@ -2,10 +2,11 @@
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Book_Management_System.Models;
 
 namespace Book_Management_System.Controllers
 {
-	//TODO: fix editing while the book is borrowed
 	public class BookController : Controller
 	{
 		private readonly ApplicationDbContext _dbContext;
@@ -49,10 +50,28 @@ namespace Book_Management_System.Controllers
 		{
 			var book = await _dbContext.Books.FindAsync(id);
 
+			book.BorrowRecord = await _dbContext.BorrowRecords
+				.Where(br => br.BookId == book.Id)
+				.ToListAsync();
+
+
 			if (book != null) {
 
-				_dbContext.Books.Remove(book);
-				await _dbContext.SaveChangesAsync();
+				if (book.BorrowRecord.Count == 0) {
+
+					_dbContext.Books.Remove(book);
+					await _dbContext.SaveChangesAsync();
+				}
+				else {
+
+					var error = new ErrorViewModel
+					{
+						RequestId = "Book cannot be deleted, it is currently borrowed."
+					};
+
+					return View("Error",error);
+				}
+				
 			}
 
 			return RedirectToAction("Index");
