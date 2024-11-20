@@ -127,5 +127,25 @@ namespace Book_Management_System.Controllers
 
 			return RedirectToAction("Index");
 		}
+
+		public async Task<IActionResult> BorrowHistory(int memberId)
+		{
+			var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == memberId);
+
+			var borrowRecords = await _dbContext.BorrowRecords
+				.Include(b => b.Book)
+				.Where(br => br.MemberId == memberId)
+				.OrderByDescending(br => br.IsActive)
+				.ThenByDescending(br => br.EndDate)
+				.ToListAsync();
+
+			var memberViewModel = new MemberViewModel
+			{
+				Member = member,
+				BorrowRecords = borrowRecords
+			};
+
+			return View(memberViewModel);
+		}
     }
 }

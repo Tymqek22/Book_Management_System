@@ -18,6 +18,9 @@
 				<dd class="card-text">@Model.Member.Phone</dd>
 			</dl>
 		</div>
+		<div class="card-footer">
+			<a class="btn btn-info" asp-action="BorrowHistory" asp-route-memberId="@Model.Member.Id">See Borrow History</a>
+		</div>
 		
 
 	</div>
