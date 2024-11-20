@@ -57,7 +57,12 @@ namespace Book_Management_System.Controllers
 
 			if (book != null) {
 
-				if (book.BorrowRecord.Count == 0) {
+				if (!book.BorrowRecord.Any(br => br.IsActive)) {
+
+					foreach (var borrow in book.BorrowRecord) {
+
+						borrow.BookId = null;
+					}
 
 					_dbContext.Books.Remove(book);
 					await _dbContext.SaveChangesAsync();

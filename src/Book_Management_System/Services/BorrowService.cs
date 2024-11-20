@@ -49,8 +49,8 @@ namespace Book_Management_System.Services
 				if (book != null) {
 
 					book.Quantity++;
-
-					_dbContext.BorrowRecords.Remove(borrowRecord);
+					borrowRecord.IsActive = false;
+					
 					await _dbContext.SaveChangesAsync();
 				}
 				else {
@@ -75,7 +75,7 @@ namespace Book_Management_System.Services
 		public async Task TrackOverdue()
 		{
 			var overdueBooks = await _dbContext.BorrowRecords
-				.Where(br => br.EndDate < DateTime.Now)
+				.Where(br => br.EndDate < DateTime.Now && br.IsActive)
 				.ToListAsync();
 
 			foreach (var borrowRecord in overdueBooks) {

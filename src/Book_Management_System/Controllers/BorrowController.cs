@@ -27,6 +27,7 @@ namespace Book_Management_System.Controllers
 			var records = await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.Include(m => m.Member)
+				.Where(br => br.IsActive)
 				.ToListAsync();
 
 			return View(records);

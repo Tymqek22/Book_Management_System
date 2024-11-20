@@ -29,7 +29,7 @@ namespace Book_Management_System.Controllers
 
 			var borrowRecords = await _dbContext.BorrowRecords
 					.Include(b => b.Book)
-					.Where(br => br.MemberId == member.Id)
+					.Where(br => br.MemberId == member.Id && br.IsActive)
 					.ToListAsync();
 
 
@@ -72,7 +72,12 @@ namespace Book_Management_System.Controllers
 
 			if (member != null) {
 
-				if (member.BorrowRecords.Count == 0) {
+				if (!member.BorrowRecords.Any(br => br.IsActive)) {
+
+					foreach (var borrow in member.BorrowRecords) {
+
+						borrow.MemberId = null;
+					}
 
 					_dbContext.Members.Remove(member);
 					await _dbContext.SaveChangesAsync();
