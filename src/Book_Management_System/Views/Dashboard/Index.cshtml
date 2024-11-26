@@ -1,0 +1,68 @@
+﻿@model Domain.Entities.ViewModels.DashboardViewModel
+
+@{
+}
+
+<div class="album py-5 bg-light">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h3>Daily stats</h3>
+					</div>
+					<div class="card-body">
+						<dl>
+							<dt class="badge bg-dark">Total books borrowed</dt>
+							<dd>@Model.DailyStats.TotalBooksBorrowed</dd>
+							<dt class="badge bg-dark">Total books returned</dt>
+							<dd>@Model.DailyStats.TotalBooksReturned</dd>
+							<dt class="badge bg-dark">Total books overdue</dt>
+							<dd>@Model.DailyStats.TotalBooksOverdue</dd>
+							<dt class="badge bg-dark">Currently borrowed</dt>
+							<dd>@Model.DailyStats.CurrentlyBorrowedBooks</dd>
+						</dl>
+					</div>
+					
+				</div>
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h3>Monthly stats</h3>
+					</div>
+					<div class="card-body">
+						<dl>
+							<dt class="badge bg-dark">Total books borrowed</dt>
+							<dd>@Model.MonthlyStats.TotalBooksBorrowed</dd>
+							<dt class="badge bg-dark">Total books returned</dt>
+							<dd>@Model.MonthlyStats.TotalBooksReturned</dd>
+							<dt class="badge bg-dark">Total books overdue</dt>
+							<dd>@Model.MonthlyStats.TotalBooksOverdue</dd>
+							<dt class="badge bg-dark">Currently borrowed</dt>
+							<dd>@Model.MonthlyStats.CurrentlyBorrowedBooks</dd>
+						</dl>
+					</div>
+
+				</div>
+				<div class="card mb-4 box-shadow">
+					<div class="card-header">
+						<h3>Yearly stats</h3>
+					</div>
+					<div class="card-body">
+						<dl>
+							<dt class="badge bg-dark">Total books borrowed</dt>
+							<dd>@Model.YearlyStats.TotalBooksBorrowed</dd>
+							<dt class="badge bg-dark">Total books returned</dt>
+							<dd>@Model.YearlyStats.TotalBooksReturned</dd>
+							<dt class="badge bg-dark">Total books overdue</dt>
+							<dd>@Model.YearlyStats.TotalBooksOverdue</dd>
+							<dt class="badge bg-dark">Currently borrowed</dt>
+							<dd>@Model.YearlyStats.CurrentlyBorrowedBooks</dd>
+						</dl>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>

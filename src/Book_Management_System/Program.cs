@@ -13,6 +13,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("BookManagementSy
 b.MigrationsAssembly("Book_Management_System")));
 
 builder.Services.AddScoped<IBorrowService,BorrowService>();
+builder.Services.AddScoped<IReportService,ReportService>();
 
 var app = builder.Build();
 
