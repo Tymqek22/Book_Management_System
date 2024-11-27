@@ -27,7 +27,9 @@ namespace Book_Management_System.Controllers
 			{
 				DailyStats = await _reportService.GetPeriodicBorrowStats(today,today),
 				MonthlyStats = await _reportService.GetPeriodicBorrowStats(monthlyStartDate,monthlyEndDate),
-				YearlyStats = await _reportService.GetPeriodicBorrowStats(yearlyStartDate,yearlyEndDate)
+				YearlyStats = await _reportService.GetPeriodicBorrowStats(yearlyStartDate,yearlyEndDate),
+				TopBorrowedBooks = await _reportService.GetMostPopularBooks(5),
+				TheMostActiveMembers = await _reportService.GetMostActiveMembers(5)
 			};
 
 			return View(viewModel);

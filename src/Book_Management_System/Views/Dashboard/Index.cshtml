@@ -23,8 +23,10 @@
 							<dd>@Model.DailyStats.CurrentlyBorrowedBooks</dd>
 						</dl>
 					</div>
-					
 				</div>
+			</div>
+					
+			<div class="col-md-4">
 				<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h3>Monthly stats</h3>
@@ -41,8 +43,10 @@
 							<dd>@Model.MonthlyStats.CurrentlyBorrowedBooks</dd>
 						</dl>
 					</div>
-
 				</div>
+			</div>
+				
+			<div class="col-md-4">
 				<div class="card mb-4 box-shadow">
 					<div class="card-header">
 						<h3>Yearly stats</h3>
@@ -59,10 +63,49 @@
 							<dd>@Model.YearlyStats.CurrentlyBorrowedBooks</dd>
 						</dl>
 					</div>
-
 				</div>
 			</div>
-		</div>
 
+			<div class="col-md-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Title</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var book in Model.TopBorrowedBooks)
+						{
+
+							<tr>
+								<td>@book.Title</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="col-md-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Member</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var member in Model.TheMostActiveMembers)
+						{
+
+							<tr>
+								<td>@member.FirstName @member.LastName</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+			
+		</div>
 	</div>
 </div>
+
+
