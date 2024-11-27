@@ -4,6 +4,7 @@ using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Book_Management_System.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Book_Management_System.Controllers
 {
@@ -19,13 +20,17 @@ namespace Book_Management_System.Controllers
 		public async Task<IActionResult> Index()
 		{
 			await this.TrackAvailibility();
-			var books = await _dbContext.Books.ToListAsync();
+			var books = await _dbContext.Books
+				.Include(b => b.Genre)
+				.ToListAsync();
 
 			return View(books);
 		}
 
-		public IActionResult Add()
+		public async Task<IActionResult> Add()
 		{
+			await PopulateGenres();
+
 			return View();
 		}
 
@@ -84,7 +89,11 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Edit(int id)
 		{
-			var book = await _dbContext.Books.FindAsync(id);
+			var book = await _dbContext.Books
+				.Include(b => b.Genre)
+				.FirstOrDefaultAsync(b => b.Id == id);
+
+			await PopulateGenres();
 
 			return View(book);
 		}
@@ -100,6 +109,7 @@ namespace Book_Management_System.Controllers
 
 					book.Title = newBook.Title;
 					book.Author = newBook.Author;
+					book.GenreId = newBook.GenreId;
 					book.Language = newBook.Language;
 					book.IsAvailable = newBook.IsAvailable;
 					book.Quantity = newBook.Quantity;
@@ -116,7 +126,9 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Details(int id)
 		{
-			var book = await _dbContext.Books.FindAsync(id);
+			var book = await _dbContext.Books
+				.Include(b => b.Genre)
+				.FirstOrDefaultAsync(b => b.Id == id);
 			
 			return View(book);
 		}
@@ -143,6 +155,14 @@ namespace Book_Management_System.Controllers
             }
 
             await _dbContext.SaveChangesAsync();
+		}
+
+		[NonAction]
+		public async Task PopulateGenres()
+		{
+			var genres = await _dbContext.Genres.ToListAsync();
+
+			ViewBag.Genres = new SelectList(genres,"Id","Name");
 		}
 	}
 }

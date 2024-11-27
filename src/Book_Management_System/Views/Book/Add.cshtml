@@ -15,6 +15,13 @@
 		<input class="form-control" type="text" asp-for="Author" />
 		<span asp-validation-for="Author" class="text-danger"></span>
 	</div>
+
+	<div class="mt-3">
+		<label class="form-label" for="GenreId">Genre</label>
+		<select asp-for="GenreId" asp-items="@ViewBag.Genres">
+			<option value="--Select genre--"></option>
+		</select>
+	</div>
 	
 	<div class="mt-3">
 		<label class="form-label" for="Language">Language</label>
