@@ -13,6 +13,9 @@ namespace Domain.Entities
         [Required(ErrorMessage = "Please enter the author.")]
         public string Author { get; set; }
 
+		public int? GenreId { get; set; }
+		public Genre? Genre { get; set; }
+
 		[Required(ErrorMessage = "Please enter the language.")]
 		public string Language { get; set; }
         public bool IsAvailable { get; set; }

@@ -12,5 +12,6 @@ namespace Domain.Persistence
         public DbSet<Book> Books { get; set; }
         public DbSet<Member> Members { get; set; }
         public DbSet<BorrowRecord> BorrowRecords { get; set; }
-    }
+		public DbSet<Genre> Genres { get; set; }
+	}
 }
