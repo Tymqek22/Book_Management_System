@@ -13,6 +13,7 @@ namespace Domain.Entities
         [Required(ErrorMessage = "Please enter the author.")]
         public string Author { get; set; }
 
+        [Required(ErrorMessage = "Please choose the genre.")]
 		public int? GenreId { get; set; }
 		public Genre? Genre { get; set; }
 

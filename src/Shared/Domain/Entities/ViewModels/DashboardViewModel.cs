@@ -1,9 +1,4 @@
 ﻿using Domain.DTO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Entities.ViewModels
 {
@@ -15,6 +10,6 @@ namespace Domain.Entities.ViewModels
 
 		public IEnumerable<Book>? TopBorrowedBooks { get; set; }
 		public IEnumerable<Member>? TheMostActiveMembers { get; set; }
-
+		public IEnumerable<GenreStatisticsDto>? GenreStats { get; set; }
 	}
 }

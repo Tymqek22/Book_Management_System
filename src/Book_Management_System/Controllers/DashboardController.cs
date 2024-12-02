@@ -31,7 +31,8 @@ namespace Book_Management_System.Controllers
 				MonthlyStats = await _reportService.GetPeriodicBorrowStats(monthlyStartDate,monthlyEndDate),
 				YearlyStats = await _reportService.GetPeriodicBorrowStats(yearlyStartDate,yearlyEndDate),
 				TopBorrowedBooks = await _reportService.GetMostPopularBooks(5),
-				TheMostActiveMembers = await _reportService.GetMostActiveMembers(5)
+				TheMostActiveMembers = await _reportService.GetMostActiveMembers(5),
+				GenreStats = await _reportService.GetPeriodicGenreStats(monthlyStartDate,monthlyEndDate)
 			};
 
 			return View(viewModel);

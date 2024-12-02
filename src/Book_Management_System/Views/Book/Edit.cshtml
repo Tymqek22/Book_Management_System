@@ -21,6 +21,7 @@
 		<select asp-for="GenreId" asp-items="@ViewBag.Genres">
 			<option value="--Select genre--"></option>
 		</select>
+		<span asp-validation-for="GenreId" class="text-danger"></span>
 	</div>
 
 	<div class="mt-3">

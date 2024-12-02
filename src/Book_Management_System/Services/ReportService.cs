@@ -44,6 +44,28 @@ namespace Book_Management_System.Services
 			return stats;
 		}
 
+		public async Task<List<GenreStatisticsDto>> GetPeriodicGenreStats(DateTime startDate, DateTime endDate)
+		{
+			int totalBorrowedBooks = await _dbContext.BorrowRecords
+				.Where(br => br.IsActive && br.StartDate >= startDate && br.StartDate <= endDate)
+				.CountAsync();
+
+			var stats = await _dbContext.BorrowRecords
+				.Where(br => br.IsActive && br.StartDate >= startDate && br.StartDate <= endDate)
+				.Include(br => br.Book)
+				.ThenInclude(b => b.Genre)
+				.GroupBy(b => b.Book.Genre)
+				.Select(grp => new GenreStatisticsDto
+				{
+					Genre = grp.Key,
+					Percentage = (int)Math.Round(((double)grp.Count() / totalBorrowedBooks) * 100)
+				})
+				.OrderByDescending(s => s.Percentage)
+				.ToListAsync();
+
+			return stats;
+		}
+
 		public async Task<List<Book>> GetMostPopularBooks(int limit)
 		{
 			var books = await _dbContext.BorrowRecords

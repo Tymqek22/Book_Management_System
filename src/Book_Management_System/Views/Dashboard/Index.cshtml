@@ -104,6 +104,26 @@
 				</table>
 			</div>
 			
+			<div class="col-md-auto">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Genres</th>
+							<th>Percentage</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var stats in Model.GenreStats)
+						{
+
+							<tr>
+								<td>@stats.Genre.Name</td>
+								<td>@stats.Percentage %</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

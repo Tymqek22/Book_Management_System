@@ -2,7 +2,6 @@
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Book_Management_System.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
