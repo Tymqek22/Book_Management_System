@@ -66,18 +66,17 @@ namespace Book_Management_System.Services
 			return stats;
 		}
 
-		public async Task<List<Book>> GetMostPopularBooks(int limit)
+		public async Task<List<BookBorrowedDto>> GetMostPopularBooks(int limit)
 		{
 			var books = await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.GroupBy(b => b.Book)
-				.Select(grp => new
+				.Select(grp => new BookBorrowedDto
 				{
 					Book = grp.Key,
-					NumberOfBorrowed = grp.Count()
+					BooksBorrowed = grp.Count()
 				})
-				.OrderByDescending(r => r.NumberOfBorrowed)
-				.Select(book => book.Book)
+				.OrderByDescending(r => r.BooksBorrowed)
 				.Take(limit)
 				.ToListAsync();
 

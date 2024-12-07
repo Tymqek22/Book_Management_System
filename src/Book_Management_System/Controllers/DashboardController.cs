@@ -1,4 +1,5 @@
 ﻿using Book_Management_System.Interfaces;
+using Book_Management_System.Services;
 using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,25 +16,13 @@ namespace Book_Management_System.Controllers
 			_reportService = reportService;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string period)
 		{
-			DateTime today = DateTime.Now.Date;
+			ViewBag.CurrentPeriod = period;
 
-			DateTime monthlyStartDate = new DateTime(today.Year,today.Month,1);
-			DateTime monthlyEndDate = new DateTime(today.Year,today.Month,DateTime.DaysInMonth(today.Year,today.Month));
+			var factory = new DashboardViewModelFactory(_reportService);
 
-			DateTime yearlyStartDate = new DateTime(today.Year,1,1);
-			DateTime yearlyEndDate = new DateTime(today.Year,12,31);
-
-			var viewModel = new DashboardViewModel
-			{
-				DailyStats = await _reportService.GetPeriodicBorrowStats(today,today),
-				MonthlyStats = await _reportService.GetPeriodicBorrowStats(monthlyStartDate,monthlyEndDate),
-				YearlyStats = await _reportService.GetPeriodicBorrowStats(yearlyStartDate,yearlyEndDate),
-				TopBorrowedBooks = await _reportService.GetMostPopularBooks(5),
-				TheMostActiveMembers = await _reportService.GetMostActiveMembers(5),
-				GenreStats = await _reportService.GetPeriodicGenreStats(monthlyStartDate,monthlyEndDate)
-			};
+			var viewModel = await factory.GetDashboardViewModel(period);
 
 			return View(viewModel);
 		}

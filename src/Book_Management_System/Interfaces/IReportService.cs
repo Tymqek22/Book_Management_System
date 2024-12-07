@@ -8,7 +8,7 @@ namespace Book_Management_System.Interfaces
 	{
 		Task<BorrowStatisticsDto> GetPeriodicBorrowStats(DateTime startDate,DateTime endDate);
 		Task<List<GenreStatisticsDto>> GetPeriodicGenreStats(DateTime startDate,DateTime endDate);
-		Task<List<Book>> GetMostPopularBooks(int limit);
+		Task<List<BookBorrowedDto>> GetMostPopularBooks(int limit);
 		Task<List<Member>> GetMostActiveMembers(int limit);
 		
 	}

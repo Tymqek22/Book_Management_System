@@ -5,125 +5,114 @@
 
 <div class="album py-5 bg-light">
 	<div class="container">
+		<h2 class="text-center mb-4">Library Statistics</h2>
 		<div class="row">
-			<div class="col-md-4">
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h3>Daily stats</h3>
-					</div>
-					<div class="card-body">
-						<dl>
-							<dt class="badge bg-dark">Total books borrowed</dt>
-							<dd>@Model.DailyStats.TotalBooksBorrowed</dd>
-							<dt class="badge bg-dark">Total books returned</dt>
-							<dd>@Model.DailyStats.TotalBooksReturned</dd>
-							<dt class="badge bg-dark">Total books overdue</dt>
-							<dd>@Model.DailyStats.TotalBooksOverdue</dd>
-							<dt class="badge bg-dark">Currently borrowed</dt>
-							<dd>@Model.DailyStats.CurrentlyBorrowedBooks</dd>
-						</dl>
-					</div>
-				</div>
-			</div>
-					
-			<div class="col-md-4">
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h3>Monthly stats</h3>
-					</div>
-					<div class="card-body">
-						<dl>
-							<dt class="badge bg-dark">Total books borrowed</dt>
-							<dd>@Model.MonthlyStats.TotalBooksBorrowed</dd>
-							<dt class="badge bg-dark">Total books returned</dt>
-							<dd>@Model.MonthlyStats.TotalBooksReturned</dd>
-							<dt class="badge bg-dark">Total books overdue</dt>
-							<dd>@Model.MonthlyStats.TotalBooksOverdue</dd>
-							<dt class="badge bg-dark">Currently borrowed</dt>
-							<dd>@Model.MonthlyStats.CurrentlyBorrowedBooks</dd>
-						</dl>
-					</div>
-				</div>
-			</div>
-				
-			<div class="col-md-4">
-				<div class="card mb-4 box-shadow">
-					<div class="card-header">
-						<h3>Yearly stats</h3>
-					</div>
-					<div class="card-body">
-						<dl>
-							<dt class="badge bg-dark">Total books borrowed</dt>
-							<dd>@Model.YearlyStats.TotalBooksBorrowed</dd>
-							<dt class="badge bg-dark">Total books returned</dt>
-							<dd>@Model.YearlyStats.TotalBooksReturned</dd>
-							<dt class="badge bg-dark">Total books overdue</dt>
-							<dd>@Model.YearlyStats.TotalBooksOverdue</dd>
-							<dt class="badge bg-dark">Currently borrowed</dt>
-							<dd>@Model.YearlyStats.CurrentlyBorrowedBooks</dd>
-						</dl>
-					</div>
-				</div>
+			<div class="btn-group mb-4">
+				<a class="btn btn-outline-primary @(ViewBag.CurrentPeriod == "daily" ? "active" : "")" asp-action="Index" asp-route-period="daily">Daily</a>
+				<a class="btn btn-outline-primary @(ViewBag.CurrentPeriod == "monthly" ? "active" : "")" asp-action="Index" asp-route-period="monthly">Monthly</a>
+				<a class="btn btn-outline-primary @(ViewBag.CurrentPeriod == "yearly" ? "active" : "")" asp-action="Index" asp-route-period="yearly">Yearly</a>
 			</div>
 
-			<div class="col-md-auto">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Title</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var book in Model.TopBorrowedBooks)
-						{
+			<div class="d-flex justify-content-around">
+				<div class="col-md-4">
+					<div class="card mb-4 box-shadow">
+						<div class="card-header">
+							@if (ViewBag.CurrentPeriod == "daily")
+							{
 
+								<h3>Daily Stats</h3>
+							}
+							else if (ViewBag.CurrentPeriod == "monthly")
+							{
+
+								<h3>Monthly Stats</h3>
+							}
+							else if (ViewBag.CurrentPeriod == "yearly")
+							{
+
+								<h3>Yearly Stats</h3>
+							}
+						</div>
+						<div class="card-body">
+							<dl>
+								<dt class="badge bg-dark">Total books borrowed</dt>
+								<dd>@Model.BorrowStats.TotalBooksBorrowed</dd>
+								<dt class="badge bg-dark">Total books returned</dt>
+								<dd>@Model.BorrowStats.TotalBooksReturned</dd>
+								<dt class="badge bg-dark">Total books overdue</dt>
+								<dd>@Model.BorrowStats.TotalBooksOverdue</dd>
+								<dt class="badge bg-dark">Currently borrowed</dt>
+								<dd>@Model.BorrowStats.CurrentlyBorrowedBooks</dd>
+							</dl>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-auto">
+					<table class="table caption-top table-bordered">
+						<caption>Most Popular Books</caption>
+						<thead>
 							<tr>
-								<td>@book.Title</td>
+								<th>Title</th>
+								<th>Number of borrowed</th>
 							</tr>
-						}
-					</tbody>
-				</table>
-			</div>
+						</thead>
+						<tbody>
+							@foreach (var book in Model.TopBorrowedBooks)
+							{
 
-			<div class="col-md-auto">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Member</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var member in Model.TheMostActiveMembers)
-						{
+								<tr>
+									<td>@book.Book.Title</td>
+									<td>@book.BooksBorrowed</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
 
+				<div class="col-md-auto">
+					<table class="table caption-top table-bordered">
+						<caption>Most Active Members</caption>
+						<thead>
 							<tr>
-								<td>@member.FirstName @member.LastName</td>
+								<th>Member</th>
 							</tr>
-						}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							@foreach (var member in Model.TheMostActiveMembers)
+							{
+
+								<tr>
+									<td>@member.FirstName @member.LastName</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+
+				<div class="col-md-auto">
+					<table class="table caption-top table-bordered">
+						<caption>Most Popular Genres</caption>
+						<thead>
+							<tr>
+								<th>Genres</th>
+								<th>Percentage</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var stats in Model.GenreStats)
+							{
+
+								<tr>
+									<td>@stats.Genre.Name</td>
+									<td>@stats.Percentage %</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
 			</div>
 			
-			<div class="col-md-auto">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Genres</th>
-							<th>Percentage</th>
-						</tr>
-					</thead>
-					<tbody>
-						@foreach (var stats in Model.GenreStats)
-						{
-
-							<tr>
-								<td>@stats.Genre.Name</td>
-								<td>@stats.Percentage %</td>
-							</tr>
-						}
-					</tbody>
-				</table>
-			</div>
 		</div>
 	</div>
 </div>
