@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Book_Management_System.Models;
+using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Book_Management_System.Controllers

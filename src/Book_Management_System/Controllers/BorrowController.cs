@@ -1,11 +1,11 @@
 ﻿using Domain.Entities;
-using Domain.DTO;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Book_Management_System.Interfaces;
-using Book_Management_System.Models;
+using Book_Management_System.ViewModels;
+using Book_Management_System.DTO;
 
 namespace Book_Management_System.Controllers
 {

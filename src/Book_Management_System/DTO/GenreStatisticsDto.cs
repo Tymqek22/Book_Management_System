@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Domain.DTO
+namespace Book_Management_System.DTO
 {
 	public class GenreStatisticsDto
 	{

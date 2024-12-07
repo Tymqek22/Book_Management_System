@@ -1,6 +1,5 @@
-﻿using Book_Management_System.Models;
+﻿using Book_Management_System.ViewModels;
 using Domain.Entities;
-using Domain.Entities.ViewModels;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

@@ -1,4 +1,6 @@
-﻿namespace Domain.Entities.ViewModels
+﻿using Domain.Entities;
+
+namespace Book_Management_System.ViewModels
 {
 	public class MemberViewModel
 	{

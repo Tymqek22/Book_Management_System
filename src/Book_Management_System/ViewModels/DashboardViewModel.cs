@@ -1,6 +1,7 @@
-﻿using Domain.DTO;
+﻿using Domain.Entities;
+using Book_Management_System.DTO;
 
-namespace Domain.Entities.ViewModels
+namespace Book_Management_System.ViewModels
 {
 	public class DashboardViewModel
 	{

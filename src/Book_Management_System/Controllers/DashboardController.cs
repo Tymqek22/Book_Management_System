@@ -1,5 +1,5 @@
 ﻿using Book_Management_System.Interfaces;
-using Domain.Entities.ViewModels;
+using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book_Management_System.Controllers
