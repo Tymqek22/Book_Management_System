@@ -14,6 +14,7 @@ b.MigrationsAssembly("Book_Management_System")));
 
 builder.Services.AddScoped<IBorrowService,BorrowService>();
 builder.Services.AddScoped<IReportService,ReportService>();
+builder.Services.AddScoped<IDashboardService,DashboardService>();
 
 var app = builder.Build();
 
