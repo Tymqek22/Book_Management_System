@@ -51,6 +51,11 @@ namespace Book_Management_System.Services
 					book.Quantity++;
 					borrowRecord.ReturnDate = DateTime.Now.Date;
 					borrowRecord.IsActive = false;
+
+					if (borrowRecord.IsOverdue) {
+
+						borrowRecord.IsOverdue = false;
+					}
 					
 					await _dbContext.SaveChangesAsync();
 				}

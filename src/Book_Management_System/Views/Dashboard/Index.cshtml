@@ -13,23 +13,20 @@
 				<a class="btn btn-outline-primary @(ViewBag.CurrentPeriod == "yearly" ? "active" : "")" asp-action="Index" asp-route-period="yearly">Yearly</a>
 			</div>
 
-			<div class="d-flex justify-content-around">
+			<div class="d-flex justify-content-between">
 				<div class="col-md-4">
 					<div class="card mb-4 box-shadow">
 						<div class="card-header">
 							@if (ViewBag.CurrentPeriod == "daily")
 							{
-
 								<h3>Daily Stats</h3>
 							}
 							else if (ViewBag.CurrentPeriod == "monthly")
 							{
-
 								<h3>Monthly Stats</h3>
 							}
 							else if (ViewBag.CurrentPeriod == "yearly")
 							{
-
 								<h3>Yearly Stats</h3>
 							}
 						</div>

@@ -4,24 +4,24 @@ using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Book_Management_System.Repositories;
 
 namespace Book_Management_System.Controllers
 {
 	public class BookController : Controller
 	{
-		private readonly ApplicationDbContext _dbContext;
+		private readonly IBookRepository _repository;
 
-        public BookController(ApplicationDbContext dbContext)
+        public BookController(IBookRepository repository)
         {
-			_dbContext = dbContext;
+			_repository = repository;
         }
 
 		public async Task<IActionResult> Index()
 		{
 			await this.TrackAvailibility();
-			var books = await _dbContext.Books
-				.Include(b => b.Genre)
-				.ToListAsync();
+			
+			var books = await _repository.GetAll();
 
 			return View(books);
 		}
@@ -38,8 +38,8 @@ namespace Book_Management_System.Controllers
 		{
 			if (ModelState.IsValid) {
 
-				await _dbContext.Books.AddAsync(book);
-				await _dbContext.SaveChangesAsync();
+				await _repository.Insert(book);
+				await _repository.Save();
 			}
 			else {
 				return View(book);
@@ -52,12 +52,7 @@ namespace Book_Management_System.Controllers
 		
 		public async Task<IActionResult> Delete(int id)
 		{
-			var book = await _dbContext.Books.FindAsync(id);
-
-			book.BorrowRecord = await _dbContext.BorrowRecords
-				.Where(br => br.BookId == book.Id)
-				.ToListAsync();
-
+			var book = await _repository.GetByIdWithBorrowRecords(id);
 
 			if (book != null) {
 
@@ -68,8 +63,8 @@ namespace Book_Management_System.Controllers
 						borrow.BookId = null;
 					}
 
-					_dbContext.Books.Remove(book);
-					await _dbContext.SaveChangesAsync();
+					_repository.Delete(book);
+					await _repository.Save();
 				}
 				else {
 
@@ -88,9 +83,8 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Edit(int id)
 		{
-			var book = await _dbContext.Books
-				.Include(b => b.Genre)
-				.FirstOrDefaultAsync(b => b.Id == id);
+
+			var book = await _repository.GetById(id);
 
 			await PopulateGenres();
 
@@ -102,19 +96,8 @@ namespace Book_Management_System.Controllers
 		{
 			if (ModelState.IsValid) {
 
-				var book = await _dbContext.Books.FindAsync(newBook.Id);
-
-				if (book != null) {
-
-					book.Title = newBook.Title;
-					book.Author = newBook.Author;
-					book.GenreId = newBook.GenreId;
-					book.Language = newBook.Language;
-					book.IsAvailable = newBook.IsAvailable;
-					book.Quantity = newBook.Quantity;
-				}
-
-				await _dbContext.SaveChangesAsync();
+				await _repository.Update(newBook);
+				await _repository.Save();
 			}
 			else {
 				return View(newBook);
@@ -125,9 +108,8 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Details(int id)
 		{
-			var book = await _dbContext.Books
-				.Include(b => b.Genre)
-				.FirstOrDefaultAsync(b => b.Id == id);
+
+			var book = await _repository.GetById(id);
 			
 			return View(book);
 		}
@@ -135,31 +117,27 @@ namespace Book_Management_System.Controllers
 		[NonAction]
 		public async Task TrackAvailibility()
 		{
-			var unavailableBooks = await _dbContext.Books
-				.Where(b => b.Quantity == 0 && b.IsAvailable)
-				.ToListAsync();
+			var unavailableBooks = await _repository.GetUnavailableBooks();
 
             foreach (var book in unavailableBooks) {
 
                 book.IsAvailable = false;
             }
 
-			var availableBooks = await _dbContext.Books
-				.Where(b => b.Quantity > 0 && !b.IsAvailable)
-				.ToListAsync();
+			var availableBooks = await _repository.GetAvailableBooks();
 
             foreach (var book in availableBooks) {
 
                 book.IsAvailable = true;
             }
 
-            await _dbContext.SaveChangesAsync();
+			await _repository.Save();
 		}
 
 		[NonAction]
 		public async Task PopulateGenres()
 		{
-			var genres = await _dbContext.Genres.ToListAsync();
+			var genres = await _repository.GetGenres();
 
 			ViewBag.Genres = new SelectList(genres,"Id","Name");
 		}

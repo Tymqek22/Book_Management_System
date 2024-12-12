@@ -1,4 +1,5 @@
 using Book_Management_System.Interfaces;
+using Book_Management_System.Repositories;
 using Book_Management_System.Services;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ b.MigrationsAssembly("Book_Management_System")));
 builder.Services.AddScoped<IBorrowService,BorrowService>();
 builder.Services.AddScoped<IReportService,ReportService>();
 builder.Services.AddScoped<IDashboardService,DashboardService>();
+
+builder.Services.AddScoped<IBookRepository,BookRepository>();
 
 var app = builder.Build();
 
