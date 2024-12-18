@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Book_Management_System.Repositories
+namespace Book_Management_System.Repositories.Interfaces
 {
 	public interface IBorrowRecordRepository
 	{

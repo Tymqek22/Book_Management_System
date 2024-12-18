@@ -1,7 +1,7 @@
 ﻿using Book_Management_System.DTO;
 using Domain.Entities;
 
-namespace Book_Management_System.Repositories
+namespace Book_Management_System.Repositories.Interfaces
 {
 	public interface IMemberRepository
 	{

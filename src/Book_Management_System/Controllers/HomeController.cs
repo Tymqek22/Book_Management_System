@@ -1,5 +1,4 @@
 using Book_Management_System.ViewModels;
-using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using System.Diagnostics;
 
 namespace Book_Management_System.Controllers
 {
-    public class HomeController : Controller
+	public class HomeController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
 

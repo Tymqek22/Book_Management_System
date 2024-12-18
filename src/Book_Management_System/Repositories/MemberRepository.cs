@@ -1,4 +1,5 @@
 ﻿using Book_Management_System.DTO;
+using Book_Management_System.Repositories.Interfaces;
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,4 @@
-﻿using Book_Management_System.Interfaces;
-using Book_Management_System.Services;
+﻿using Book_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book_Management_System.Controllers

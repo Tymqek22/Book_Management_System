@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Book_Management_System.Interfaces
+namespace Book_Management_System.Services.Interfaces
 {
 	public interface IBorrowService
 	{

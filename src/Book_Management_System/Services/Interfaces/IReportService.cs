@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
-namespace Book_Management_System.Interfaces
+namespace Book_Management_System.Services.Interfaces
 {
 	public interface IReportService
 	{
@@ -10,6 +10,6 @@ namespace Book_Management_System.Interfaces
 		Task<List<GenreStatisticsDto>> GetPeriodicGenreStats(DateTime startDate,DateTime endDate);
 		Task<List<BookBorrowedDto>> GetMostPopularBooks(int limit);
 		Task<List<Member>> GetMostActiveMembers(int limit);
-		
+
 	}
 }

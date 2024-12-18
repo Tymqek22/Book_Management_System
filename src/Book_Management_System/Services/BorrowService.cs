@@ -1,5 +1,5 @@
-﻿using Book_Management_System.Interfaces;
-using Book_Management_System.Repositories;
+﻿using Book_Management_System.Repositories.Interfaces;
+using Book_Management_System.Services.Interfaces;
 using Domain.Entities;
 
 namespace Book_Management_System.Services

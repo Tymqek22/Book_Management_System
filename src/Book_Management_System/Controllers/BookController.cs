@@ -2,7 +2,7 @@
 using Domain.Entities;
 using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Book_Management_System.Repositories;
+using Book_Management_System.Repositories.Interfaces;
 
 namespace Book_Management_System.Controllers
 {

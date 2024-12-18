@@ -1,6 +1,7 @@
-using Book_Management_System.Interfaces;
 using Book_Management_System.Repositories;
+using Book_Management_System.Repositories.Interfaces;
 using Book_Management_System.Services;
+using Book_Management_System.Services.Interfaces;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
 

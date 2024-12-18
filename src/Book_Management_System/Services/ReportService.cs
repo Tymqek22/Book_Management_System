@@ -1,8 +1,8 @@
-﻿using Book_Management_System.Interfaces;
-using Book_Management_System.DTO;
+﻿using Book_Management_System.DTO;
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Book_Management_System.Services.Interfaces;
 
 namespace Book_Management_System.Services
 {
