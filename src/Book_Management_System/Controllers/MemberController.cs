@@ -1,4 +1,5 @@
-﻿using Book_Management_System.ViewModels;
+﻿using Book_Management_System.Repositories;
+using Book_Management_System.ViewModels;
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
@@ -8,29 +9,27 @@ namespace Book_Management_System.Controllers
 {
 	public class MemberController : Controller
 	{
-		private readonly ApplicationDbContext _dbContext;
+		private readonly IBorrowRecordRepository _borrowRecordRepository;
+		private readonly IMemberRepository _memberRepository;
 
-        public MemberController(ApplicationDbContext dbContext)
+        public MemberController(IBorrowRecordRepository borrowRecordRepository,IMemberRepository memberRepository)
         {
-			_dbContext = dbContext;
+			_borrowRecordRepository = borrowRecordRepository;
+			_memberRepository = memberRepository;
         }
 
 		public async Task<IActionResult> Index()
 		{
-			var members = await _dbContext.Members.ToListAsync();
+			var members = await _memberRepository.GetAll();
 
 			return View(members);
 		}
 
 		public async Task<IActionResult> Details(int id)
 		{
-			var member = await _dbContext.Members.FindAsync(id);
+			var member = await _memberRepository.GetById(id);
 
-			var borrowRecords = await _dbContext.BorrowRecords
-					.Include(b => b.Book)
-					.Where(br => br.MemberId == member.Id && br.IsActive)
-					.ToListAsync();
-
+			var borrowRecords = await _borrowRecordRepository.GetMemberActiveRecords(member);
 
 			var memberViewModel = new MemberViewModel
 			{
@@ -51,8 +50,8 @@ namespace Book_Management_System.Controllers
 		{
 			if (ModelState.IsValid) {
 
-				await _dbContext.Members.AddAsync(newMember);
-				await _dbContext.SaveChangesAsync();
+				await _memberRepository.Insert(newMember);
+				await _memberRepository.Save();
 			}
 			else {
 				return View(newMember);
@@ -63,13 +62,11 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Delete(int id)
 		{
-			var member = await _dbContext.Members.FindAsync(id);
-
-			member.BorrowRecords = await _dbContext.BorrowRecords
-				.Where(br => br.MemberId == member.Id)
-				.ToListAsync();
+			var member = await _memberRepository.GetById(id);
 
 			if (member != null) {
+
+				member.BorrowRecords = await _borrowRecordRepository.GetAllMemberRecords(member);
 
 				if (!member.BorrowRecords.Any(br => br.IsActive)) {
 
@@ -78,8 +75,8 @@ namespace Book_Management_System.Controllers
 						borrow.MemberId = null;
 					}
 
-					_dbContext.Members.Remove(member);
-					await _dbContext.SaveChangesAsync();
+					_memberRepository.Delete(member);
+					await _memberRepository.Save();
 				}
 				else {
 
@@ -98,7 +95,7 @@ namespace Book_Management_System.Controllers
 
         public async Task<IActionResult> Update(int id)
         {
-			var foundMember = await _dbContext.Members.FindAsync(id);
+			var foundMember = await _memberRepository.GetById(id);
 
 			return View(foundMember);
         }
@@ -108,17 +105,8 @@ namespace Book_Management_System.Controllers
 		{
 			if (ModelState.IsValid) {
 
-				var member = await _dbContext.Members.FindAsync(memberToUpdate.Id);
-
-				if (member != null) {
-
-					member.FirstName = memberToUpdate.FirstName;
-					member.LastName = memberToUpdate.LastName;
-					member.Email = memberToUpdate.Email;
-					member.Phone = memberToUpdate.Phone;
-
-					await _dbContext.SaveChangesAsync();
-				}
+				await _memberRepository.Update(memberToUpdate);
+				await _memberRepository.Save();
 			}
 			else {
 				return View(memberToUpdate);
@@ -129,14 +117,9 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> BorrowHistory(int memberId)
 		{
-			var member = await _dbContext.Members.FirstOrDefaultAsync(m => m.Id == memberId);
+			var member = await _memberRepository.GetById(memberId);
 
-			var borrowRecords = await _dbContext.BorrowRecords
-				.Include(b => b.Book)
-				.Where(br => br.MemberId == memberId)
-				.OrderByDescending(br => br.IsActive)
-				.ThenByDescending(br => br.EndDate)
-				.ToListAsync();
+			var borrowRecords = await _borrowRecordRepository.GetAllMemberRecords(member);
 
 			var memberViewModel = new MemberViewModel
 			{

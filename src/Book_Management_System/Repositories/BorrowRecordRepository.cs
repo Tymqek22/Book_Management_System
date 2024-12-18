@@ -27,11 +27,6 @@ namespace Book_Management_System.Repositories
 			await _dbContext.BorrowRecords.AddAsync(borrowRecord);
 		}
 
-		public Task Update(BorrowRecord borrowRecord)
-		{
-			throw new NotImplementedException();
-		}
-
 		public void Delete(BorrowRecord borrowRecord)
 		{
 			if (borrowRecord.Book != null) {
@@ -70,6 +65,28 @@ namespace Book_Management_System.Repositories
 				.ToListAsync();
 
 			return overdueBooks;
+		}
+
+		public async Task<List<BorrowRecord>> GetMemberActiveRecords(Member member)
+		{
+			var borrowRecords = await _dbContext.BorrowRecords
+					.Include(b => b.Book)
+					.Where(br => br.MemberId == member.Id && br.IsActive)
+					.ToListAsync();
+
+			return borrowRecords;
+		}
+
+		public async Task<List<BorrowRecord>> GetAllMemberRecords(Member member)
+		{
+			var borrowRecords = await _dbContext.BorrowRecords
+				.Include(b => b.Book)
+				.Where(br => br.MemberId == member.Id)
+				.OrderByDescending(br => br.IsActive)
+				.ThenByDescending(br => br.EndDate)
+				.ToListAsync();
+
+			return borrowRecords;
 		}
 	}
 }

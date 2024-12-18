@@ -11,15 +11,15 @@ namespace Book_Management_System.Controllers
 {
 	public class BorrowController : Controller
 	{
-		private readonly ApplicationDbContext _dbContext;
 		private readonly IBorrowService _borrowService;
 		private readonly IBookRepository _bookRepository;
+		private readonly IMemberRepository _memberRepository;
 
-        public BorrowController(ApplicationDbContext dbContext, IBorrowService borrowService,IBookRepository bookRepository)
+        public BorrowController(IBorrowService borrowService,IBookRepository bookRepository,IMemberRepository memberRepository)
         {
-			_dbContext = dbContext;
 			_borrowService = borrowService;
 			_bookRepository = bookRepository;
+			_memberRepository = memberRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -74,16 +74,9 @@ namespace Book_Management_System.Controllers
 		}
 
 		[NonAction]
-		private void PopulateMembers()
+		private async void PopulateMembers()
 		{
-			var members = _dbContext.Members
-				.Select(m => new MemberDto
-				{
-					Id = m.Id,
-					FullName = m.FirstName + " " + m.LastName
-				})
-				.OrderBy(d => d.FullName)
-				.ToList();
+			var members = await _memberRepository.PopulateMembers();
 
 			ViewBag.Members = new SelectList(members,"Id","FullName");
 		}
