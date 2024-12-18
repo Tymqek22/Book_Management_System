@@ -1,9 +1,7 @@
 ﻿using Book_Management_System.Repositories;
 using Book_Management_System.ViewModels;
 using Domain.Entities;
-using Domain.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Book_Management_System.Controllers
 {

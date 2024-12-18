@@ -70,6 +70,7 @@ namespace Book_Management_System.Services
 		{
 			var books = await _dbContext.BorrowRecords
 				.Include(b => b.Book)
+				.Where(br => br.Book != null)
 				.GroupBy(b => b.Book)
 				.Select(grp => new BookBorrowedDto
 				{
@@ -87,6 +88,7 @@ namespace Book_Management_System.Services
 		{
 			var members = await _dbContext.BorrowRecords
 				.Include(m => m.Member)
+				.Where(br => br.Member != null)
 				.GroupBy(m => m.Member)
 				.Select(grp => new
 				{

@@ -81,7 +81,7 @@ namespace Book_Management_System.Repositories
 		{
 			var borrowRecords = await _dbContext.BorrowRecords
 				.Include(b => b.Book)
-				.Where(br => br.MemberId == member.Id)
+				.Where(br => br.MemberId == member.Id && br.Book != null)
 				.OrderByDescending(br => br.IsActive)
 				.ThenByDescending(br => br.EndDate)
 				.ToListAsync();
