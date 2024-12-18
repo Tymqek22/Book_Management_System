@@ -1,22 +1,23 @@
 ﻿using Book_Management_System.Interfaces;
+using Book_Management_System.Repositories;
 using Domain.Entities;
-using Domain.Persistence;
-using Microsoft.EntityFrameworkCore;
 
 namespace Book_Management_System.Services
 {
 	public class BorrowService : IBorrowService
 	{
-		private readonly ApplicationDbContext _dbContext;
+		private readonly IBookRepository _bookRepository;
+		private readonly IBorrowRecordRepository _borrowRecordRepository;
 
-        public BorrowService(ApplicationDbContext dbContext)
+        public BorrowService(IBookRepository bookRepository,IBorrowRecordRepository borrowRecordRepository)
         {
-			_dbContext = dbContext;
+			_bookRepository = bookRepository;
+			_borrowRecordRepository = borrowRecordRepository;
         }
 
         public async Task<bool> LendBook(BorrowRecord borrowRecord)
 		{
-			var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
+			var book = await _bookRepository.GetById((int)borrowRecord.BookId);
 
 			if (book != null) {
 
@@ -24,8 +25,8 @@ namespace Book_Management_System.Services
 
 					book.Quantity--;
 
-					await _dbContext.BorrowRecords.AddAsync(borrowRecord);
-					await _dbContext.SaveChangesAsync();
+					await _borrowRecordRepository.Insert(borrowRecord);
+					await _borrowRecordRepository.Save();
 				}
 				else {
 					return false;
@@ -40,28 +41,12 @@ namespace Book_Management_System.Services
 
 		public async Task<bool> ReturnBook(int id)
 		{
-			var borrowRecord = await _dbContext.BorrowRecords.FindAsync(id);
+			var borrowRecord = await _borrowRecordRepository.GetById(id);
 
 			if (borrowRecord != null) {
 
-				var book = await _dbContext.Books.FindAsync(borrowRecord.BookId);
-
-				if (book != null) {
-
-					book.Quantity++;
-					borrowRecord.ReturnDate = DateTime.Now.Date;
-					borrowRecord.IsActive = false;
-
-					if (borrowRecord.IsOverdue) {
-
-						borrowRecord.IsOverdue = false;
-					}
-					
-					await _dbContext.SaveChangesAsync();
-				}
-				else {
-					return false;
-				}
+				_borrowRecordRepository.Delete(borrowRecord);
+				await _borrowRecordRepository.Save();
 			}
 			else {
 				return false;
@@ -78,22 +63,21 @@ namespace Book_Management_System.Services
 			return false;
 		}
 
+		public async Task<IEnumerable<BorrowRecord>> GetActiveBorrowRecords()
+		{
+			return await _borrowRecordRepository.GetActiveRecords();
+		}
+
 		public async Task TrackOverdue()
 		{
-			var overdueBooks = await _dbContext.BorrowRecords
-				.Where(br => br.EndDate < DateTime.Now && br.IsActive)
-				.ToListAsync();
+			var overdueBooks = await _borrowRecordRepository.GetOverdueRecords();
 
 			foreach (var borrowRecord in overdueBooks) {
-
-				if (!borrowRecord.IsOverdue) {
-					borrowRecord.IsOverdue = true;
-				}
 				
 				this.CalculateFine(borrowRecord);
 			}
 
-			await _dbContext.SaveChangesAsync();
+			await _borrowRecordRepository.Save();
 		}
 
 		public void CalculateFine(BorrowRecord borrowRecord)

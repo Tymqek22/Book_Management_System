@@ -28,9 +28,12 @@ namespace Book_Management_System.Repositories
 				.Include(b => b.Genre)
 				.FirstOrDefaultAsync(b => b.Id == id);
 
-			book.BorrowRecord = await _dbContext.BorrowRecords
+			if (book != null) {
+
+				book.BorrowRecord = await _dbContext.BorrowRecords
 				.Where(br => br.BookId == id)
 				.ToListAsync();
+			}
 
 			return book;
 		}
