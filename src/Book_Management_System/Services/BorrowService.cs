@@ -75,6 +75,7 @@ namespace Book_Management_System.Services
 			foreach (var borrowRecord in overdueBooks) {
 				
 				this.CalculateFine(borrowRecord);
+				borrowRecord.IsOverdue = true;
 			}
 
 			await _borrowRecordRepository.Save();

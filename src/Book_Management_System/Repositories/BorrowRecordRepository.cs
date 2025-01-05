@@ -16,11 +16,9 @@ namespace Book_Management_System.Repositories
 
 		public async Task<BorrowRecord> GetById(int id)
 		{
-			var record = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.FirstOrDefaultAsync(br => br.Id == id);
-
-			return record;
 		}
 
 		public async Task Insert(BorrowRecord borrowRecord)
@@ -50,44 +48,36 @@ namespace Book_Management_System.Repositories
 
 		public async Task<IEnumerable<BorrowRecord>> GetActiveRecords()
 		{
-			var activeRecords = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.Include(m => m.Member)
 				.Where(br => br.IsActive && br.ReturnDate == null)
 				.ToListAsync();
-
-			return activeRecords;
 		}
 
 		public async Task<IEnumerable<BorrowRecord>> GetOverdueRecords()
 		{
-			var overdueBooks = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Where(br => br.EndDate < DateTime.Now && br.IsActive)
 				.ToListAsync();
-
-			return overdueBooks;
 		}
 
 		public async Task<List<BorrowRecord>> GetMemberActiveRecords(Member member)
 		{
-			var borrowRecords = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 					.Include(b => b.Book)
 					.Where(br => br.MemberId == member.Id && br.IsActive)
 					.ToListAsync();
-
-			return borrowRecords;
 		}
 
 		public async Task<List<BorrowRecord>> GetAllMemberRecords(Member member)
 		{
-			var borrowRecords = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.Where(br => br.MemberId == member.Id && br.Book != null)
 				.OrderByDescending(br => br.IsActive)
 				.ThenByDescending(br => br.EndDate)
 				.ToListAsync();
-
-			return borrowRecords;
 		}
 	}
 }

@@ -16,11 +16,9 @@ namespace Book_Management_System.Repositories
 
 		public async Task<Book> GetById(int id)
 		{
-			var book = await _dbContext.Books
+			return await _dbContext.Books
 				.Include(b => b.Genre)
 				.FirstOrDefaultAsync(b => b.Id == id);
-
-			return book;
 		}
 
 		public async Task<Book> GetByIdWithBorrowRecords(int id)
@@ -41,11 +39,9 @@ namespace Book_Management_System.Repositories
 
 		public async Task<IEnumerable<Book>> GetAll()
 		{
-			var books = await _dbContext.Books
+			return await _dbContext.Books
 				.Include(b => b.Genre)
 				.ToListAsync();
-
-			return books;
 		}
 
 		public async Task Insert(Book book)
@@ -80,27 +76,21 @@ namespace Book_Management_System.Repositories
 
 		public async Task<IEnumerable<Book>> GetAvailableBooks()
 		{
-			var availableBooks = await _dbContext.Books
+			return await _dbContext.Books
 				.Where(b => b.Quantity > 0)
 				.ToListAsync();
-
-			return availableBooks;
 		}
 
 		public async Task<IEnumerable<Book>> GetUnavailableBooks()
 		{
-			var unavailableBooks = await _dbContext.Books
+			return await _dbContext.Books
 				.Where(b => b.Quantity == 0)
 				.ToListAsync();
-
-			return unavailableBooks;
 		}
 
 		public async Task<IEnumerable<Genre>> GetGenres()
 		{
-			var genres = await _dbContext.Genres.ToListAsync();
-
-			return genres;
+			return await _dbContext.Genres.ToListAsync();
 		}
 	}
 }

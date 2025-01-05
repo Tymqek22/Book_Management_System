@@ -50,14 +50,12 @@ namespace Book_Management_System.Repositories
 
 		public async Task<IEnumerable<Member>> GetAll()
 		{
-			var members = await _dbContext.Members.ToListAsync();
-
-			return members;
+			return await _dbContext.Members.ToListAsync();
 		}
 
 		public async Task<IEnumerable<MemberDto>> PopulateMembers()
 		{
-			var members = await _dbContext.Members
+			return await _dbContext.Members
 				.Select(m => new MemberDto
 				{
 					Id = m.Id,
@@ -65,8 +63,6 @@ namespace Book_Management_System.Repositories
 				})
 				.OrderBy(d => d.FullName)
 				.ToListAsync();
-
-			return members;
 		}
 	}
 }
