@@ -3,21 +3,24 @@ using Domain.Entities;
 using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Book_Management_System.Repositories.Interfaces;
+using Book_Management_System.Services.Interfaces;
 
 namespace Book_Management_System.Controllers
 {
 	public class BookController : Controller
 	{
 		private readonly IBookRepository _repository;
+		private readonly IBookService _bookService;
 
-        public BookController(IBookRepository repository)
+        public BookController(IBookRepository repository, IBookService bookService)
         {
 			_repository = repository;
+			_bookService = bookService;
         }
 
 		public async Task<IActionResult> Index()
 		{
-			await this.TrackAvailibility();
+			await _bookService.TrackAvailability();
 			
 			var books = await _repository.GetAll();
 
@@ -50,33 +53,18 @@ namespace Book_Management_System.Controllers
 		
 		public async Task<IActionResult> Delete(int id)
 		{
-			var book = await _repository.GetByIdWithBorrowRecords(id);
 
-			if (book != null) {
+			if (await _bookService.Delete(id)) {
 
-				if (!book.BorrowRecord.Any(br => br.IsActive)) {
-
-					foreach (var borrow in book.BorrowRecord) {
-
-						borrow.BookId = null;
-					}
-
-					_repository.Delete(book);
-					await _repository.Save();
-				}
-				else {
-
-					var error = new ErrorViewModel
-					{
-						RequestId = "Book cannot be deleted, it is currently borrowed."
-					};
-
-					return View("Error",error);
-				}
-				
+				return RedirectToAction("Index");
 			}
 
-			return RedirectToAction("Index");
+			var error = new ErrorViewModel
+			{
+				RequestId = "Book cannot be deleted, it is currently borrowed."
+			};
+
+			return View("Error",error);
 		}
 
 		public async Task<IActionResult> Edit(int id)
@@ -110,26 +98,6 @@ namespace Book_Management_System.Controllers
 			var book = await _repository.GetById(id);
 			
 			return View(book);
-		}
-
-		[NonAction]
-		public async Task TrackAvailibility()
-		{
-			var unavailableBooks = await _repository.GetUnavailableBooks();
-
-            foreach (var book in unavailableBooks) {
-
-                book.IsAvailable = false;
-            }
-
-			var availableBooks = await _repository.GetAvailableBooks();
-
-            foreach (var book in availableBooks) {
-
-                book.IsAvailable = true;
-            }
-
-			await _repository.Save();
 		}
 
 		[NonAction]

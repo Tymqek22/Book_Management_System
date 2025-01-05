@@ -14,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("BookManagementSystem"), b => 
 b.MigrationsAssembly("Book_Management_System")));
 
+builder.Services.AddScoped<IBookService,BookService>();
 builder.Services.AddScoped<IBorrowService,BorrowService>();
 builder.Services.AddScoped<IReportService,ReportService>();
 builder.Services.AddScoped<IDashboardService,DashboardService>();
