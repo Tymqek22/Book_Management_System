@@ -4,6 +4,7 @@ using Book_Management_System.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Book_Management_System.Repositories.Interfaces;
 using Book_Management_System.Services.Interfaces;
+using Book_Management_System.Utilities;
 
 namespace Book_Management_System.Controllers
 {
@@ -18,13 +19,13 @@ namespace Book_Management_System.Controllers
 			_bookService = bookService;
         }
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int pageNumber)
 		{
 			await _bookService.TrackAvailability();
 			
 			var books = await _repository.GetAll();
 
-			return View(books);
+			return View(PaginatedList<Book>.Create(books,pageNumber,10));
 		}
 
 		public async Task<IActionResult> Add()

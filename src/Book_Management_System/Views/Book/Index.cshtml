@@ -1,4 +1,4 @@
-﻿@model List<Domain.Entities.Book>
+﻿@model Book_Management_System.Utilities.PaginatedList<Domain.Entities.Book>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -22,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var book in Model) {
+            @foreach (var book in Model.Items) {
 
                 <tr>
                     <td>@book.Title</td>
@@ -47,6 +47,25 @@
             }
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++) 
+            {
+                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
 
     <div class="d-flex justify-content-between">
         <a class="btn-light" asp-action="Add" asp-controller="Book">Add book</a>
