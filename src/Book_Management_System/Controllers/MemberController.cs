@@ -1,4 +1,5 @@
 ﻿using Book_Management_System.Repositories.Interfaces;
+using Book_Management_System.Utilities;
 using Book_Management_System.ViewModels;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,11 @@ namespace Book_Management_System.Controllers
 			_memberRepository = memberRepository;
         }
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(int pageNumber)
 		{
 			var members = await _memberRepository.GetAll();
 
-			return View(members);
+			return View(PaginatedList<Member>.Create(members,pageNumber,10));
 		}
 
 		public async Task<IActionResult> Details(int id)

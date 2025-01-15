@@ -1,4 +1,4 @@
-﻿@model List<Domain.Entities.Member>
+﻿@model Book_Management_System.Utilities.PaginatedList<Domain.Entities.Member>
 
 @{
 }
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var member in Model) {
+            @foreach (var member in Model.Items) {
 
                 <tr>
                     <td>@member.FirstName</td>
@@ -32,6 +32,25 @@
             }
         </tbody>
     </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
+            </li>
+        </ul>
+    </nav>
 
     <a class="btn-light" asp-action="Register" asp-controller="Member">Add Member</a>
 </div>
