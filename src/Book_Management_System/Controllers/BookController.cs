@@ -12,20 +12,30 @@ namespace Book_Management_System.Controllers
 	{
 		private readonly IBookRepository _repository;
 		private readonly IBookService _bookService;
+		private readonly ISortingService _sortingService;
 
-        public BookController(IBookRepository repository, IBookService bookService)
+        public BookController(IBookRepository repository, IBookService bookService,ISortingService sortingService)
         {
 			_repository = repository;
 			_bookService = bookService;
+			_sortingService = sortingService;
         }
 
-		public async Task<IActionResult> Index(int pageNumber)
+		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Title")
 		{
 			await _bookService.TrackAvailability();
 			
 			var books = await _repository.GetAll();
 
-			return View(PaginatedList<Book>.Create(books,pageNumber,10));
+			Func<Book,object> sortFunction = sortBy switch
+			{
+				"Title" => book => book.Title,
+				"Author" => book => book.Author
+			};
+
+			var sortedBooks = _sortingService.Sort(books,sortFunction);
+
+			return View(PaginatedList<Book>.Create(sortedBooks,pageNumber,10,sortBy));
 		}
 
 		public async Task<IActionResult> Add()

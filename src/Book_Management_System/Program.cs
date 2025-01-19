@@ -18,6 +18,7 @@ builder.Services.AddScoped<IBookService,BookService>();
 builder.Services.AddScoped<IBorrowService,BorrowService>();
 builder.Services.AddScoped<IReportService,ReportService>();
 builder.Services.AddScoped<IDashboardService,DashboardService>();
+builder.Services.AddScoped<ISortingService,SortingService>();
 
 builder.Services.AddScoped<IBookRepository,BookRepository>();
 builder.Services.AddScoped<IBorrowRecordRepository,BorrowRecordRepository>();

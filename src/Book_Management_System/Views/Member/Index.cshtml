@@ -4,6 +4,28 @@
 }
 
 <div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)"
+                asp-route-sortBy="@Model.SortBy">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
+                       asp-route-sortBy="@Model.SortBy">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)"
+                   asp-route-sortBy="@Model.SortBy">Next</a>
+            </li>
+        </ul>
+    </nav>
+
     <table class="table">
         <thead>
             <tr>
@@ -33,24 +55,7 @@
         </tbody>
     </table>
 
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)">Previous</a>
-            </li>
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i">@i</a>
-                </li>
-            }
-
-            <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)">Next</a>
-            </li>
-        </ul>
-    </nav>
+    
 
     <a class="btn-light" asp-action="Register" asp-controller="Member">Add Member</a>
 </div>

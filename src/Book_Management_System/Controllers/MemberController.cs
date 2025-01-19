@@ -1,4 +1,5 @@
 ﻿using Book_Management_System.Repositories.Interfaces;
+using Book_Management_System.Services.Interfaces;
 using Book_Management_System.Utilities;
 using Book_Management_System.ViewModels;
 using Domain.Entities;
@@ -10,18 +11,28 @@ namespace Book_Management_System.Controllers
 	{
 		private readonly IBorrowRecordRepository _borrowRecordRepository;
 		private readonly IMemberRepository _memberRepository;
+		private readonly ISortingService _sortingService;
 
-        public MemberController(IBorrowRecordRepository borrowRecordRepository,IMemberRepository memberRepository)
+        public MemberController(IBorrowRecordRepository borrowRecordRepository,IMemberRepository memberRepository,
+			ISortingService sortingService)
         {
 			_borrowRecordRepository = borrowRecordRepository;
 			_memberRepository = memberRepository;
+			_sortingService = sortingService;
         }
 
-		public async Task<IActionResult> Index(int pageNumber)
+		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Name")
 		{
 			var members = await _memberRepository.GetAll();
 
-			return View(PaginatedList<Member>.Create(members,pageNumber,10));
+			Func<Member,object> sortingOption = sortBy switch
+			{
+				"Name" => member => member.LastName
+			};
+
+			var sortedMembers = _sortingService.Sort(members,sortingOption);
+
+			return View(PaginatedList<Member>.Create(sortedMembers,pageNumber,10,sortBy));
 		}
 
 		public async Task<IActionResult> Details(int id)
