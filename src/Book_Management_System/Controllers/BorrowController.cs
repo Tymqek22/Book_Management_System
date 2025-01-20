@@ -33,7 +33,7 @@ namespace Book_Management_System.Controllers
 		{
 			var book = await _bookRepository.GetById(bookId);
 			ViewBag.Book = book;
-			PopulateMembers();
+			await PopulateMembers();
 
 			return View();
 		}
@@ -72,7 +72,7 @@ namespace Book_Management_System.Controllers
 		}
 
 		[NonAction]
-		private async void PopulateMembers()
+		private async Task PopulateMembers()
 		{
 			var members = await _memberRepository.PopulateMembers();
 

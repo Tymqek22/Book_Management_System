@@ -1,4 +1,5 @@
-﻿using Book_Management_System.Repositories.Interfaces;
+﻿using Book_Management_System.DTO;
+using Book_Management_System.Repositories.Interfaces;
 using Domain.Entities;
 using Domain.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,18 @@ namespace Book_Management_System.Repositories
 				.ToListAsync();
 		}
 
+		public async Task<IEnumerable<BookBorrowedDto>> GetAllWithStats()
+		{
+			return await _dbContext.Books
+				.Include(b => b.Genre)
+				.Select(bs => new BookBorrowedDto
+				{
+					Book = bs,
+					BooksBorrowed = _dbContext.BorrowRecords.Count(br => br.BookId == bs.Id)
+				})
+				.ToListAsync();
+		}
+
 		public async Task Insert(Book book)
 		{
 			await _dbContext.Books.AddAsync(book);
@@ -51,7 +64,7 @@ namespace Book_Management_System.Repositories
 
 		public async Task Update(Book book)
 		{
-			var bookInDb = await this.GetById(book.Id);
+			var bookInDb = await _dbContext.Books.FindAsync(book.Id);
 
 			if (bookInDb != null) {
 

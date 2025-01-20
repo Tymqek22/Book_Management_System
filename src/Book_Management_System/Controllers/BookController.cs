@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Book_Management_System.Repositories.Interfaces;
 using Book_Management_System.Services.Interfaces;
 using Book_Management_System.Utilities;
+using Book_Management_System.DTO;
 
 namespace Book_Management_System.Controllers
 {
@@ -21,21 +22,22 @@ namespace Book_Management_System.Controllers
 			_sortingService = sortingService;
         }
 
-		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Title")
+		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Title",bool ascending = true)
 		{
 			await _bookService.TrackAvailability();
-			
-			var books = await _repository.GetAll();
 
-			Func<Book,object> sortFunction = sortBy switch
+			var books = await _repository.GetAllWithStats();
+
+			Func<BookBorrowedDto,object> sortFunction = sortBy switch
 			{
-				"Title" => book => book.Title,
-				"Author" => book => book.Author
+				"Title" => book => book.Book.Title,
+				"Author" => book => book.Book.Author,
+				"Popularity" => book => book.BooksBorrowed
 			};
 
-			var sortedBooks = _sortingService.Sort(books,sortFunction);
+			var sortedBooks = _sortingService.Sort(books,sortFunction,ascending);
 
-			return View(PaginatedList<Book>.Create(sortedBooks,pageNumber,10,sortBy));
+			return View(PaginatedList<BookBorrowedDto>.Create(sortedBooks,pageNumber,10,sortBy,ascending));
 		}
 
 		public async Task<IActionResult> Add()

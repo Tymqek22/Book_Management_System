@@ -33,15 +33,13 @@ namespace Book_Management_System.Services
 				.Where(br => br.IsActive)
 				.CountAsync();
 
-			var stats = new BorrowStatisticsDto
+			return new BorrowStatisticsDto
 			{
 				TotalBooksBorrowed = totalBorrowed,
 				TotalBooksReturned = totalReturned,
 				TotalBooksOverdue = totalOverdue,
 				CurrentlyBorrowedBooks = currentlyBorrowed
 			};
-
-			return stats;
 		}
 
 		public async Task<List<GenreStatisticsDto>> GetPeriodicGenreStats(DateTime startDate, DateTime endDate)
@@ -50,7 +48,7 @@ namespace Book_Management_System.Services
 				.Where(br => br.IsActive && br.StartDate >= startDate && br.StartDate <= endDate)
 				.CountAsync();
 
-			var stats = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Where(br => br.IsActive && br.StartDate >= startDate && br.StartDate <= endDate)
 				.Include(br => br.Book)
 				.ThenInclude(b => b.Genre)
@@ -62,13 +60,11 @@ namespace Book_Management_System.Services
 				})
 				.OrderByDescending(s => s.Percentage)
 				.ToListAsync();
-
-			return stats;
 		}
 
 		public async Task<List<BookBorrowedDto>> GetMostPopularBooks(int limit)
 		{
-			var books = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Include(b => b.Book)
 				.Where(br => br.Book != null)
 				.GroupBy(b => b.Book)
@@ -80,13 +76,11 @@ namespace Book_Management_System.Services
 				.OrderByDescending(r => r.BooksBorrowed)
 				.Take(limit)
 				.ToListAsync();
-
-			return books;
 		}
 
 		public async Task<List<Member>> GetMostActiveMembers(int limit)
 		{
-			var members = await _dbContext.BorrowRecords
+			return await _dbContext.BorrowRecords
 				.Include(m => m.Member)
 				.Where(br => br.Member != null)
 				.GroupBy(m => m.Member)
@@ -99,8 +93,6 @@ namespace Book_Management_System.Services
 				.Select(r => r.Member)
 				.Take(limit)
 				.ToListAsync();
-
-			return members;
 		}
 	}
 }

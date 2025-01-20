@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Book_Management_System.DTO;
+using Domain.Entities;
 
 namespace Book_Management_System.Repositories.Interfaces
 {
@@ -7,6 +8,7 @@ namespace Book_Management_System.Repositories.Interfaces
 		Task<Book> GetById(int id);
 		Task<Book> GetByIdWithBorrowRecords(int id);
 		Task<IEnumerable<Book>> GetAll();
+		Task<IEnumerable<BookBorrowedDto>> GetAllWithStats();
 		Task Insert(Book book);
 		Task Update(Book book);
 		void Delete(Book book);

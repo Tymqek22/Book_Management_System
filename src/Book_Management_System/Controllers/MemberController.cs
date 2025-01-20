@@ -21,7 +21,7 @@ namespace Book_Management_System.Controllers
 			_sortingService = sortingService;
         }
 
-		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Name")
+		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Name",bool ascending = true)
 		{
 			var members = await _memberRepository.GetAll();
 
@@ -30,9 +30,9 @@ namespace Book_Management_System.Controllers
 				"Name" => member => member.LastName
 			};
 
-			var sortedMembers = _sortingService.Sort(members,sortingOption);
+			var sortedMembers = _sortingService.Sort(members,sortingOption,ascending);
 
-			return View(PaginatedList<Member>.Create(sortedMembers,pageNumber,10,sortBy));
+			return View(PaginatedList<Member>.Create(sortedMembers,pageNumber,10,sortBy,ascending));
 		}
 
 		public async Task<IActionResult> Details(int id)

@@ -4,9 +4,13 @@ namespace Book_Management_System.Services
 {
 	public class SortingService : ISortingService
 	{
-		public IEnumerable<T> Sort<T>(IEnumerable<T> records,Func<T,object> sortBy)
+		public IEnumerable<T> Sort<T>(IEnumerable<T> records,Func<T,object> sortBy,bool ascending)
 		{
-			return records.OrderBy(sortBy);
+			return ascending switch
+			{
+				true => records.OrderBy(sortBy),
+				false => records.OrderByDescending(sortBy)
+			};
 		}
 	}
 }

@@ -8,16 +8,18 @@
 		public int PageSize { get; set; }
 		public int TotalPages { get; set; }
 		public string SortBy { get; set; }
+		public bool Ascending { get; set; }
 
-		public PaginatedList(List<T> items, int count, int pageIndex, int pageSize, string sortOption)
+		public PaginatedList(List<T> items, int count, int pageIndex, int pageSize, string sortOption,bool ascending)
 		{
 			Items = items;
 			TotalPages = (int)Math.Ceiling(count / (double)pageSize);
 			PageIndex = pageIndex;
 			SortBy = sortOption;
+			Ascending = ascending;
 		}
 
-		public static PaginatedList<T> Create(IEnumerable<T> allItems, int pageIndex, int pageSize, string sortOption)
+		public static PaginatedList<T> Create(IEnumerable<T> allItems,int pageIndex,int pageSize,string sortOption,bool ascending)
 		{
 			var items = allItems
 				.Skip((pageIndex - 1) * pageSize)
@@ -26,7 +28,7 @@
 
 			int totalItems = allItems.Count();
 
-			return new PaginatedList<T>(items,totalItems,pageIndex,pageSize,sortOption);
+			return new PaginatedList<T>(items,totalItems,pageIndex,pageSize,sortOption,ascending);
 		}
 	}
 }

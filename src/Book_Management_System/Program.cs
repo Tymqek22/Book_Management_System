@@ -20,9 +20,9 @@ builder.Services.AddScoped<IReportService,ReportService>();
 builder.Services.AddScoped<IDashboardService,DashboardService>();
 builder.Services.AddScoped<ISortingService,SortingService>();
 
-builder.Services.AddScoped<IBookRepository,BookRepository>();
-builder.Services.AddScoped<IBorrowRecordRepository,BorrowRecordRepository>();
-builder.Services.AddScoped<IMemberRepository,MemberRepository>();
+builder.Services.AddTransient<IBookRepository,BookRepository>();
+builder.Services.AddTransient<IBorrowRecordRepository,BorrowRecordRepository>();
+builder.Services.AddTransient<IMemberRepository,MemberRepository>();
 
 var app = builder.Build();
 
