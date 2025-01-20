@@ -1,4 +1,5 @@
-﻿using Book_Management_System.Repositories.Interfaces;
+﻿using Book_Management_System.DTO;
+using Book_Management_System.Repositories.Interfaces;
 using Book_Management_System.Services.Interfaces;
 using Book_Management_System.Utilities;
 using Book_Management_System.ViewModels;
@@ -23,16 +24,17 @@ namespace Book_Management_System.Controllers
 
 		public async Task<IActionResult> Index(int pageNumber,string sortBy = "Name",bool ascending = true)
 		{
-			var members = await _memberRepository.GetAll();
+			var members = await _memberRepository.GetAllWithStats();
 
-			Func<Member,object> sortingOption = sortBy switch
+			Func<MemberStatsDto,object> sortingOption = sortBy switch
 			{
-				"Name" => member => member.LastName
+				"Name" => member => member.Member.LastName,
+				"Popularity" => member => member.BooksBorrowed
 			};
 
 			var sortedMembers = _sortingService.Sort(members,sortingOption,ascending);
 
-			return View(PaginatedList<Member>.Create(sortedMembers,pageNumber,10,sortBy,ascending));
+			return View(PaginatedList<MemberStatsDto>.Create(sortedMembers,pageNumber,10,sortBy,ascending));
 		}
 
 		public async Task<IActionResult> Details(int id)

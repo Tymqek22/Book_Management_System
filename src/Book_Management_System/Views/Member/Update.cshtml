@@ -27,6 +27,7 @@
 		<input class="form-control" type="tel" asp-for="Phone" />
 		<span asp-validation-for="Phone" class="text-danger"></span>
 	</div>
+	<input type="hidden" asp-for="Id" value="@Model.Id" />
 
 	<input class="btn btn-success" type="submit" value="Save Changes" />
 </form>

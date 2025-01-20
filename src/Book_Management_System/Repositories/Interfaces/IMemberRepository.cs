@@ -12,6 +12,7 @@ namespace Book_Management_System.Repositories.Interfaces
 		Task Save();
 
 		Task<IEnumerable<Member>> GetAll();
+		Task<IEnumerable<MemberStatsDto>> GetAllWithStats();
 		Task<IEnumerable<MemberDto>> PopulateMembers();
 	}
 }

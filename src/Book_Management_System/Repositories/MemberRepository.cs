@@ -53,6 +53,17 @@ namespace Book_Management_System.Repositories
 			return await _dbContext.Members.ToListAsync();
 		}
 
+		public async Task<IEnumerable<MemberStatsDto>> GetAllWithStats()
+		{
+			return await _dbContext.Members
+				.Select(m => new MemberStatsDto
+				{
+					Member = m,
+					BooksBorrowed = _dbContext.BorrowRecords.Count(br => br.MemberId == m.Id)
+				})
+				.ToListAsync();
+		}
+
 		public async Task<IEnumerable<MemberDto>> PopulateMembers()
 		{
 			return await _dbContext.Members

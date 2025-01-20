@@ -1,30 +1,54 @@
-﻿@model Book_Management_System.Utilities.PaginatedList<Domain.Entities.Member>
+﻿@model Book_Management_System.Utilities.PaginatedList<Book_Management_System.DTO.MemberStatsDto>
 
 @{
 }
 
 <div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)"
-                asp-route-sortBy="@Model.SortBy">Previous</a>
-            </li>
-
-            @for (int i = 1; i <= Model.TotalPages; i++)
-            {
-                <li class="page-item @(Model.PageIndex == i ? "active" : "")">
-                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
-                       asp-route-sortBy="@Model.SortBy">@i</a>
+    <div class="d-flex">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex - 1)"
+                       asp-route-sortBy="@Model.SortBy" asp-route-ascending="@Model.Ascending">Previous</a>
                 </li>
-            }
 
-            <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
-                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)"
-                   asp-route-sortBy="@Model.SortBy">Next</a>
-            </li>
-        </ul>
-    </nav>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.PageIndex == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
+                           asp-route-sortBy="@Model.SortBy" asp-route-ascending="@Model.Ascending">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(Model.PageIndex < Model.TotalPages ? "" : "disabled")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageIndex + 1)"
+                       asp-route-sortBy="@Model.SortBy" asp-route-ascending="@Model.Ascending">Next</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonLight" data-bs-toggle="dropdown" aria-expanded="false">
+                Sorting by: @Model.SortBy
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="Sort by">
+                <li>
+                    <a class="dropdown-item" asp-action="Index" asp-route-pageNumber="@Model.PageIndex"
+                       asp-route-sortBy="Name">Last Name</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-action="Index" asp-route-pageNumber="@Model.PageIndex"
+                       asp-route-sortBy="Popularity" asp-route-ascending="false">Most Active</a>
+                </li>
+                <li>
+                    <a class="dropdown-item" asp-action="Index" asp-route-pageNumber="@Model.PageIndex"
+                       asp-route-sortBy="Popularity" asp-route-ascending="true">Least Active</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    
 
     <table class="table">
         <thead>
@@ -40,15 +64,15 @@
             @foreach (var member in Model.Items) {
 
                 <tr>
-                    <td>@member.FirstName</td>
-                    <td>@member.LastName</td>
-                    <td>@member.Email</td>
-                    <td>@member.Phone</td>
+                    <td>@member.Member.FirstName</td>
+                    <td>@member.Member.LastName</td>
+                    <td>@member.Member.Email</td>
+                    <td>@member.Member.Phone</td>
                     <td>
-                        <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Member" asp-route-id="@member.Id">Details</a>
-                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Member" 
-                        asp-route-id="@member.Id" onclick="return confirm('Are you sure, you want to delete member: @member.FirstName @member.LastName')">Delete</a>
-                        <a class="btn btn-outline-secondary" asp-action="Update" asp-controller="Member" asp-route-id="@member.Id">Edit</a>
+                        <a class="btn btn-outline-primary" asp-action="Details" asp-controller="Member" asp-route-id="@member.Member.Id">Details</a>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-controller="Member"
+                           asp-route-id="@member.Member.Id" onclick="return confirm('Are you sure, you want to delete member: @member.Member.FirstName @member.Member.LastName')">Delete</a>
+                        <a class="btn btn-outline-secondary" asp-action="Update" asp-controller="Member" asp-route-id="@member.Member.Id">Edit</a>
                     </td>
                 </tr>
             }
